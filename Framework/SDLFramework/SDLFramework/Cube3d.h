@@ -35,6 +35,7 @@ public:
 	Matrix rendered_points() const;
 
 private:
+	void draw_center(const Vec& current) const;
 	void draw_rect(const Vec& current) const;
 	void draw_line(const Vec& last, const Vec& current) const;
 

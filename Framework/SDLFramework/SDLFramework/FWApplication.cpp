@@ -401,6 +401,16 @@ Camera & FWApplication::GetCamera()
 	return camera;
 }
 
+bool FWApplication::IsShowDebug() const
+{
+	return show_debug;
+}
+
+void FWApplication::SetShowDebug(bool value)
+{
+	show_debug = value;
+}
+
 
 //void FWApplication::AddOnEvent(std::function<void(SDL_Event*)> func)
 //{

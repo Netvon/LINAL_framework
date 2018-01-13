@@ -14,6 +14,7 @@ public:
 	Shape(std::initializer_list<Matrix::row> init);
 	Shape(std::initializer_list<Vec> init);
 
+	Matrix transform(const Vec& point);
 	Matrix transform() const;
 	Matrix transform(std::initializer_list<Matrix> remote_transforms) const;
 

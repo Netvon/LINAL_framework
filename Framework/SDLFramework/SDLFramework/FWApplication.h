@@ -253,6 +253,9 @@ public:
 	void SetCamera(const Camera& camera);
 	Camera& GetCamera();
 
+	bool IsShowDebug() const;
+	void SetShowDebug(bool value);
+
 private:
 	std::vector<IGameObject *> mGameObjects;
 	static FWApplication * mInstance;
@@ -275,6 +278,7 @@ private:
 	//uint32_t mColor;
 
 	Camera camera;
+	bool show_debug{ false };
 
 };
 

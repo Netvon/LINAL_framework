@@ -98,6 +98,7 @@ int main(int args[])
 
 	Cube3d cube_a{ 0.f, 0.f, 100.f, 20.f, 20.f, 20.f };
 	Cube3d cube_b{ -100.f, 0.f, 100.f, 20.f, 20.f, 20.f };
+	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
 	
 	application->SetTargetFPS(120);
 	application->SetColor(Color(48, 124, 56, 0));
@@ -116,8 +117,9 @@ int main(int args[])
 	application->AddRenderable(&dd);
 	application->AddRenderable(&cube_a);
 	application->AddRenderable(&cube_b);
+	application->AddRenderable(&cube_c);
 
-	constexpr float movement = 0.5f;
+	constexpr float movement = 5.0f;
 	constexpr float camera_movement = 1.5f;
 
 	while (application->IsRunning())
@@ -184,19 +186,43 @@ int main(int args[])
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_W) {
+					application->GetCamera().eye()[1] -= movement;
+					application->GetCamera().look_at()[1] -= movement;
 					cube_a.y() -= movement;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_S) {
+					application->GetCamera().eye()[1] += movement;
+					application->GetCamera().look_at()[1] += movement;
 					cube_a.y() += movement;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_A) {
+					application->GetCamera().eye()[0] += movement;
+					application->GetCamera().look_at()[0] += movement;
 					cube_a.x() += movement;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_D) {
+					application->GetCamera().eye()[0] -= movement;
+					application->GetCamera().look_at()[0] -= movement;
 					cube_a.x() -= movement;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
+					application->SetShowDebug(!application->IsShowDebug());
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_Z) {
+					cube_a.scale_x() += 0.1f;
+					cube_a.scale_y() += 0.1f;
+					cube_a.scale_z() += 0.1f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_X) {
+					cube_a.scale_x() -= 0.1f;
+					cube_a.scale_y() -= 0.1f;
+					cube_a.scale_z() -= 0.1f;
 				}
 
 
@@ -209,6 +235,10 @@ int main(int args[])
 					cam.far() = 100.f;
 					cam.fov() = 40.f;
 					cam.size() = 720.f;
+
+					cube_a.scale_x() = 1.f;
+					cube_a.scale_y() = 1.f;
+					cube_a.scale_z() = 1.f;
 				}
 
 

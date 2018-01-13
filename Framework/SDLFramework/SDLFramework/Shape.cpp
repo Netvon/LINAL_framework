@@ -10,6 +10,33 @@ Shape::Shape(std::initializer_list<Vec> init)
 {
 }
 
+Matrix Shape::transform(const Vec & point)
+{
+	Matrix mat{ point };
+
+	if (!validate_transforms()) {
+		throw std::invalid_argument("Malformed transforms");
+	}
+
+	bool first_done = false;
+	Matrix init = transforms.at(0);
+
+	if (transforms.empty())
+		return init;
+
+	for (const Matrix& mat : transforms) {
+
+		if (!first_done) {
+			first_done = true;
+			continue;
+		}
+
+		init = init * mat;
+	}
+
+	return init * mat;
+}
+
 Matrix Shape::transform() const
 {
 	return transform({});

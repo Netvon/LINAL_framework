@@ -117,8 +117,14 @@ void Cube3d::Draw()
 	Camera& camera = mApplication->GetCamera();
 	Matrix output = camera.fix(camera.matrix() * transform());
 
-	for (auto& rect : output) {
-		draw_rect(rect);
+	if (mApplication->IsShowDebug()) {
+		Matrix render_center = camera.fix(camera.matrix() * transform(Vec{ 0.0f, 0.0f, 0.0f, 1.0f }));
+		draw_center(render_center[0]);
+	
+
+		for (auto& rect : output) {
+			draw_rect(rect);
+		}
 	}
 
 	for (auto& line : line_draw_order) {
@@ -133,6 +139,18 @@ Matrix Cube3d::rendered_points() const
 	return _rendered;
 }
 
+void Cube3d::draw_center(const Vec & current) const
+{
+	constexpr int point_size = 5;
+	constexpr int half_point_size = point_size / 2;
+
+	int end_x = static_cast<int>(std::round(current[0]));
+	int end_y = static_cast<int>(std::round(current[1]));
+
+	mApplication->SetColor(Color(14, 142, 108, 128));
+	mApplication->DrawRect(end_x - half_point_size, end_y - half_point_size, point_size, point_size, true);
+}
+
 void Cube3d::draw_rect(const Vec & current) const
 {
 	constexpr int point_size = 5;
@@ -143,6 +161,10 @@ void Cube3d::draw_rect(const Vec & current) const
 
 	mApplication->SetColor(Color(204, 141, 16, 128));
 	mApplication->DrawRect(end_x - half_point_size, end_y - half_point_size, point_size, point_size, true);
+
+	if (mApplication->IsShowDebug()) {
+		mApplication->DrawText(std::to_string(end_x) + "," + std::to_string(end_y), end_x, end_y, Color(9, 81, 226, 32));
+	}
 }
 
 void Cube3d::draw_line(const Vec& last, const Vec& current) const
