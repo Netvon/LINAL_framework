@@ -3,6 +3,7 @@
 #include <functional>
 #include <cstdint>
 #include <vector>
+#include "Camera.h"
 
 class IGameObject;
 struct SDL_Renderer;
@@ -249,6 +250,9 @@ public:
 
 	void SetWindowSize(int width, int height);
 
+	void SetCamera(const Camera& camera);
+	Camera& GetCamera();
+
 private:
 	std::vector<IGameObject *> mGameObjects;
 	static FWApplication * mInstance;
@@ -269,6 +273,8 @@ private:
 	std::string mFontName;
 	uint32_t mFontSize;
 	//uint32_t mColor;
+
+	Camera camera;
 
 };
 

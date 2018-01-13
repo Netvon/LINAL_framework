@@ -391,6 +391,16 @@ void FWApplication::SetWindowSize(int width, int height)
 	SDL_SetWindowSize(mWindow, width, height);
 }
 
+void FWApplication::SetCamera(const Camera & camera)
+{
+	this->camera = camera;
+}
+
+Camera & FWApplication::GetCamera()
+{
+	return camera;
+}
+
 
 //void FWApplication::AddOnEvent(std::function<void(SDL_Event*)> func)
 //{

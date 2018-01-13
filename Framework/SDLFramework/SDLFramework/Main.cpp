@@ -15,6 +15,8 @@
 #include "Matrix.h"
 #include "Shape.h"
 #include "Square2d.h"
+#include "Camera.h"
+#include "Cube3d.h"
 
 int main(int args[])
 {
@@ -80,7 +82,22 @@ int main(int args[])
 		return EXIT_FAILURE;
 	}
 
-	Square2d square{ 150.f, 125.f, 25.f, 25.f };
+	Camera camera;
+	camera.eye() = { 0.f, 0.f, 0.f };
+	camera.look_at() = { 0.f, 0.f, 1.f };
+	camera.near() = 2.f;
+	camera.far() = 100.f;
+	camera.fov() = 40.f;
+	camera.size() = 500.f;
+
+	application->SetCamera(camera);
+
+	//Square2d square{ 150.f, 125.f, 25.f, 25.f };
+
+	//auto hmm = camera.fix(camera.matrix() * square.transform());
+
+	Cube3d cube_a{ 0.f, 0.f, 100.f, 20.f, 20.f, 20.f };
+	Cube3d cube_b{ -100.f, 0.f, 100.f, 20.f, 20.f, 20.f };
 	
 	application->SetTargetFPS(120);
 	application->SetColor(Color(48, 124, 56, 0));
@@ -96,7 +113,8 @@ int main(int args[])
 	};
 
 	application->AddRenderable(&dd);
-	application->AddRenderable(&square);
+	application->AddRenderable(&cube_a);
+	application->AddRenderable(&cube_b);
 
 	while (application->IsRunning())
 	{
@@ -114,12 +132,68 @@ int main(int args[])
 			case SDL_KEYDOWN:
 				// About what it's supposed to do
 
+				if (event.key.keysym.scancode == SDL_SCANCODE_UP) {
+					application->GetCamera().eye()[1] += 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
+					application->GetCamera().eye()[1] -= 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT) {
+					application->GetCamera().eye()[0] += 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
+					application->GetCamera().eye()[0] -= 0.01f;
+				}
+
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_KP_8) {
+					application->GetCamera().look_at()[1] += 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_KP_2) {
+					application->GetCamera().look_at()[1] -= 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_KP_4) {
+					application->GetCamera().look_at()[0] += 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_KP_6) {
+					application->GetCamera().look_at()[0] -= 0.01f;
+				}
+
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_ESCAPE) {
+					auto& cam = application->GetCamera();
+
+					cam.eye() = { 0.f, 0.f, 0.f };
+					cam.look_at() = { 0.f, 0.f, 1.f };
+					cam.near() = 2.f;
+					cam.far() = 100.f;
+					cam.fov() = 40.f;
+					cam.size() = 500.f;
+				}
+
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_KP_PLUS) {
+					application->GetCamera().fov() += 0.5f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_KP_MINUS) {
+					application->GetCamera().fov() -= 0.5f;
+				}
+
 				break;
 			}
 		}
 		
 		// For the background
 		application->SetColor(Color(48, 124, 56, 0));
+
+		
 
 		application->UpdateGameObjects();
 		application->RenderGameObjects();

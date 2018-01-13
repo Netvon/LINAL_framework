@@ -15,6 +15,11 @@ Vec::Vec(std::initializer_list<float> init)
 
 }
 
+Vec::Vec(const Vec & other)
+	: _amount(other._amount), data(other.data)
+{
+}
+
 size_t Vec::amount() const {
 	return _amount;
 }
@@ -38,16 +43,30 @@ float Vec::distance(const Vec & other) const {
 	return temp.length();
 }
 
-Vec::operator Vec2() {
-	return Vec2(data[0], data[1]);
+float Vec::dot(const Vec & other) const
+{
+	if (_amount != other._amount) {
+		throw std::out_of_range("incompatible Vec");
+	}
+
+	float result = 0.f;
+
+	for (size_t i = 0; i < _amount; i++)
+	{
+		result += (*this)[i] * other[i];
+	}
+
+	return result;
 }
 
-Vec::operator Vec3() {
-	return Vec3(data[0], data[1], data[2]);
-}
+bool Vec::zero() const
+{
+	for (auto& f : data) {
+		if (f != 0.0f)
+			return false;
+	}
 
-Vec::operator Vec4() {
-	return Vec4(data[0], data[1], data[2], data[3]);
+	return true;
 }
 
 Vec Vec::generic_operator(std::function<float(float, float)> func, float scalar) const {
@@ -157,6 +176,16 @@ float & Vec4::z() {
 
 float & Vec4::w() {
 	return (*this)[3];
+}
+
+Vec4 Vec4::cross(const Vec4& other) const
+{
+	return Vec4{
+		(y() * other.z()) - (z() * other.y()),
+		(z() * other.x()) - (x() * other.z()),
+		(x() * other.y()) - (y() * other.x()),
+		w()
+	};
 }
 
 float Vec3::x() const {

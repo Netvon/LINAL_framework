@@ -16,6 +16,7 @@ public:
 	Vec(size_t amount);
 
 	Vec(std::initializer_list<float> init);
+	Vec(const Vec& other);
 
 	size_t amount() const;
 
@@ -24,6 +25,14 @@ public:
 	}
 
 	float operator[](size_t index) const {
+		return data.at(index);
+	}
+
+	float& operator[](int index) {
+		return data.at(index);
+	}
+
+	float operator[](int index) const {
 		return data.at(index);
 	}
 
@@ -98,9 +107,13 @@ public:
 		return !((*this) == other);
 	}
 
-	operator Vec2();
+	float dot(const Vec& other) const;
+
+	bool zero() const;
+
+	/*operator Vec2();
 	operator Vec3();
-	operator Vec4();
+	operator Vec4();*/
 
 private:
 	std::vector<float> data;
@@ -116,10 +129,18 @@ class Vec2
 	: public Vec
 {
 public:
+	Vec2(const Vec& from) 
+		: Vec(2)
+	{
+		if (from.amount() >= 2) {
+			x() = from[0];
+			y() = from[1];
+		}
+	}
+
 	Vec2(float x, float y)
 		: Vec{ x, y }
 	{
-
 	}
 
 	float x() const;
@@ -132,6 +153,16 @@ class Vec3
 	: public Vec
 {
 public:
+	Vec3(const Vec& from)
+		: Vec(3)
+	{
+		if (from.amount() >= 3) {
+			x() = from[0];
+			y() = from[1];
+			z() = from[2];
+		}
+	}
+
 	Vec3(float x, float y, float z)
 		: Vec{ x, y, z }
 	{
@@ -150,6 +181,23 @@ class Vec4
 	: public Vec
 {
 public:
+	Vec4(const Vec& from)
+		: Vec(4)
+	{
+		if (from.amount() >= 4) {
+			x() = from[0];
+			y() = from[1];
+			z() = from[2];
+			w() = from[3];
+		}
+		else if (from.amount() == 3) {
+			x() = from[0];
+			y() = from[1];
+			z() = from[2];
+			w() = 1.f;
+		}
+	}
+
 	Vec4(float x, float y, float z, float w)
 		: Vec{ x, y, z, w }
 	{
@@ -164,4 +212,6 @@ public:
 	float& y();
 	float& z();
 	float& w();
+
+	Vec4 cross(const Vec4& other) const;
 };

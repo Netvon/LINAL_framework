@@ -87,6 +87,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="Cube3d.cpp" />
     <ClCompile Include="DebugDisplay.cpp" />
     <ClCompile Include="ForceEntity.cpp" />
     <ClCompile Include="FWApplication.cpp" />
@@ -103,6 +105,7 @@
   <ItemGroup>
     <ClInclude Include="Camera.h" />
     <ClInclude Include="Config.h" />
+    <ClInclude Include="Cube3d.h" />
     <ClInclude Include="DebugDisplay.h" />
     <ClInclude Include="ForceEntity.h" />
     <ClInclude Include="FWApplication.h" />
