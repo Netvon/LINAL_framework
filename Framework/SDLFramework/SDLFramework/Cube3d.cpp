@@ -125,7 +125,12 @@ void Cube3d::Draw()
 		draw_line(output[line.a], output[line.b]);
 	}
 
-	
+	_rendered = output;
+}
+
+Matrix Cube3d::rendered_points() const
+{
+	return _rendered;
 }
 
 void Cube3d::draw_rect(const Vec & current) const

@@ -32,6 +32,8 @@ public:
 	virtual void Update(float deltaTime) override;
 	virtual void Draw() override;
 
+	Matrix rendered_points() const;
+
 private:
 	void draw_rect(const Vec& current) const;
 	void draw_line(const Vec& last, const Vec& current) const;
@@ -39,6 +41,8 @@ private:
 	void update_rotation();
 
 	float _rotation = 0.0f;
+
+	Matrix _rendered;
 
 	std::vector<line> line_draw_order;
 };

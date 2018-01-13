@@ -49,7 +49,7 @@ struct Color
 class FWApplication
 {
 public:
-	FWApplication(int offsetX = 100, int offsetY = 100, int width = 640, int height = 360);
+	FWApplication(int offsetX = 100, int offsetY = 100, int width = 720, int height = 720);
 	~FWApplication();
 
 	void SetTargetFPS(unsigned short target);

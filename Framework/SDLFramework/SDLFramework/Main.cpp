@@ -88,7 +88,7 @@ int main(int args[])
 	camera.near() = 2.f;
 	camera.far() = 100.f;
 	camera.fov() = 40.f;
-	camera.size() = 500.f;
+	camera.size() = 720.f;
 
 	application->SetCamera(camera);
 
@@ -104,10 +104,11 @@ int main(int args[])
 
 
 	DebugDisplay dd {
-		[application]() -> DebugDisplay::debug_list {
+		[application, &cube_a]() -> DebugDisplay::debug_list {
 			return {
 				std::make_pair("LINAL", "v0.1"),
 				std::make_pair("Time", std::to_string(static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f)),
+				std::make_pair("fov", std::to_string(application->GetCamera().fov())),
 			};
 		}
 	};
@@ -207,7 +208,7 @@ int main(int args[])
 					cam.near() = 2.f;
 					cam.far() = 100.f;
 					cam.fov() = 40.f;
-					cam.size() = 500.f;
+					cam.size() = 720.f;
 				}
 
 
