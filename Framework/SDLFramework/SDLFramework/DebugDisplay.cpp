@@ -21,10 +21,10 @@ void DebugDisplay::Draw()
 
 		if (count == 0) offset = 0;
 
-		Rect size = mApplication->DrawText(entry.first + ": " + entry.second, last.x + last.w + offset, last.y, Color(255,255,255,255), false);
+		Rect size = mApplication->DrawText(entry.first + ": " + entry.second, last.x + last.w + offset, last.y, Color(80,80,80, 255), false);
 
 		if (count > 0) {
-			mApplication->SetColor(Color(255, 255, 255, 128));
+			mApplication->SetColor(Color(0, 0, 0, 64));
 			mApplication->DrawRect(last.x + last.w + (offset / 2) - 1, last.y + 7, 3, 3, true);
 		}
 

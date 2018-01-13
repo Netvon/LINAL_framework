@@ -7,6 +7,11 @@ class Cube3d
 	: public Shape, public IGameObject
 {
 public:
+
+	struct line {
+		size_t a, b;
+	};
+
 	Cube3d(float x, float y, float z, float width, float height, float depth);
 
 	float& x();
@@ -28,9 +33,12 @@ public:
 	virtual void Draw() override;
 
 private:
-	void draw_line(Vec & last, Vec & current);
+	void draw_rect(const Vec& current) const;
+	void draw_line(const Vec& last, const Vec& current) const;
 
 	void update_rotation();
 
 	float _rotation = 0.0f;
+
+	std::vector<line> line_draw_order;
 };

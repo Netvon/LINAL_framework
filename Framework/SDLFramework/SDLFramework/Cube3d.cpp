@@ -27,6 +27,22 @@ Cube3d::Cube3d(float x, float y, float z, float width, float height, float depth
 	this->width() = width;
 	this->height() = height;
 	this->depth() = depth;
+
+
+	line_draw_order = {
+		{ 0llu, 1llu },
+		{ 0llu, 6llu },
+		{ 3llu, 0llu },
+		{ 3llu, 5llu },
+		{ 3llu, 2llu },
+		{ 2llu, 4llu },
+		{ 4llu, 5llu },
+		{ 4llu, 7llu },
+		{ 2llu, 1llu },
+		{ 7llu, 1llu },
+		{ 6llu, 7llu },
+		{ 6llu, 5llu },
+	};
 }
 
 float & Cube3d::x()
@@ -101,24 +117,31 @@ void Cube3d::Draw()
 	Camera& camera = mApplication->GetCamera();
 	Matrix output = camera.fix(camera.matrix() * transform());
 
-	Vec last = output[0];
-
-	for (size_t i = 1; i < output.columns(); i++)
-	{
-		Vec& current = output[i];
-		draw_line(last, current);
-		last = current;
+	for (auto& rect : output) {
+		draw_rect(rect);
 	}
 
-	draw_line(last, output[0]);
+	for (auto& line : line_draw_order) {
+		draw_line(output[line.a], output[line.b]);
+	}
+
+	
 }
 
-void Cube3d::draw_line(Vec & last, Vec & current)
+void Cube3d::draw_rect(const Vec & current) const
 {
-	if (last.zero() || current.zero()) {
-		return;
-	}
+	constexpr int point_size = 5;
+	constexpr int half_point_size = point_size / 2;
 
+	int end_x = static_cast<int>(std::round(current[0]));
+	int end_y = static_cast<int>(std::round(current[1]));
+
+	mApplication->SetColor(Color(204, 141, 16, 128));
+	mApplication->DrawRect(end_x - half_point_size, end_y - half_point_size, point_size, point_size, true);
+}
+
+void Cube3d::draw_line(const Vec& last, const Vec& current) const
+{
 	constexpr int point_size = 5;
 	constexpr int half_point_size = point_size / 2;
 
@@ -128,10 +151,6 @@ void Cube3d::draw_line(Vec & last, Vec & current)
 	int end_x = static_cast<int>(std::round(current[0]));
 	int end_y = static_cast<int>(std::round(current[1]));
 
-	mApplication->SetColor(Color(255, 255, 255, 255));
+	mApplication->SetColor(Color(80, 80, 80, 255));
 	mApplication->DrawLine(start_x, start_y, end_x, end_y);
-
-	mApplication->SetColor(Color(0, 0, 0, 32));
-	mApplication->DrawRect(start_x - half_point_size, start_y - half_point_size, point_size, point_size, true);
-	mApplication->DrawRect(end_x - half_point_size, end_y - half_point_size, point_size, point_size, true);
 }

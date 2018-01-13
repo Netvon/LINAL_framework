@@ -77,6 +77,8 @@ Matrix Camera::fix(const Matrix & from) const
 {
 	Matrix temp(from.columns(), from.rows());
 
+	size_t index = 0;
+
 	for (const Vec& vec : from) {
 		Vec4 vector(vec);
 
@@ -84,7 +86,8 @@ Matrix Camera::fix(const Matrix & from) const
 		float y = (_size / 2.f) + (((vector.y() + 1.f) / vector.w()) * (_size * 0.5f));
 		float z = -vector.z();
 
-		temp.add_column(Vec({ x, y, z, vector.w() }));
+		temp[index] = Vec({ x, y, z, vector.w() });
+		index++;
 	}
 
 	return temp;

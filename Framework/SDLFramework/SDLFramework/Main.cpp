@@ -116,6 +116,9 @@ int main(int args[])
 	application->AddRenderable(&cube_a);
 	application->AddRenderable(&cube_b);
 
+	constexpr float movement = 0.5f;
+	constexpr float camera_movement = 1.5f;
+
 	while (application->IsRunning())
 	{
 		application->StartTick();
@@ -126,26 +129,40 @@ int main(int args[])
 		{
 			switch (event.type)
 			{
+			case SDL_MOUSEWHEEL:
+				if (event.wheel.x == 1)
+					cube_a.z() += 0.1f;
+				else if (event.wheel.x == -1)
+					cube_a.z() -= 0.1f;
+				else {
+					std::cout << event.wheel.x;
+				}
+				break;
 			case SDL_QUIT:
 				application->Quit();
 				break;
+
 			case SDL_KEYDOWN:
 				// About what it's supposed to do
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_UP) {
-					application->GetCamera().eye()[1] += 0.01f;
+					application->GetCamera().eye()[1] += camera_movement;
+					application->GetCamera().look_at()[1] += camera_movement;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_DOWN) {
-					application->GetCamera().eye()[1] -= 0.01f;
+					application->GetCamera().eye()[1] -= camera_movement;
+					application->GetCamera().look_at()[1] -= camera_movement;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_LEFT) {
-					application->GetCamera().eye()[0] += 0.01f;
+					application->GetCamera().eye()[0] -= camera_movement;
+					application->GetCamera().look_at()[0] -= camera_movement;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_RIGHT) {
-					application->GetCamera().eye()[0] -= 0.01f;
+					application->GetCamera().eye()[0] += camera_movement;
+					application->GetCamera().look_at()[0] += camera_movement;
 				}
 
 
@@ -163,6 +180,22 @@ int main(int args[])
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_KP_6) {
 					application->GetCamera().look_at()[0] -= 0.01f;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_W) {
+					cube_a.y() -= movement;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_S) {
+					cube_a.y() += movement;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_A) {
+					cube_a.x() += movement;
+				}
+
+				if (event.key.keysym.scancode == SDL_SCANCODE_D) {
+					cube_a.x() -= movement;
 				}
 
 
@@ -198,7 +231,7 @@ int main(int args[])
 		application->UpdateGameObjects();
 		application->RenderGameObjects();
 
-		application->SetColor(Color(48, 124, 56, 0));
+		application->SetColor(Color(200, 200, 200, 255));
 
 		application->EndTick();
 
