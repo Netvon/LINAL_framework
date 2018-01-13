@@ -94,6 +94,7 @@
     <ClCompile Include="FWApplication.cpp" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="Object.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="Shape.cpp" />
     <ClCompile Include="Square2d.cpp" />
@@ -111,6 +112,7 @@
     <ClInclude Include="FWApplication.h" />
     <ClInclude Include="IGameObject.h" />
     <ClInclude Include="Matrix.h" />
+    <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectWithState.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Shape.h" />
