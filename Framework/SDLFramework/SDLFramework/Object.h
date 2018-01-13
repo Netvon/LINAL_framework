@@ -34,6 +34,9 @@ public:
 
 	Matrix rendered_points() const;
 
+	const Color& line_color() const;
+	void line_color(const Color& line_color);
+
 
 protected:
 	std::vector<line> line_draw_order;
@@ -48,4 +51,5 @@ private:
 	float _rotation = 0.0f;
 
 	Matrix _rendered;
+	Color _line_color{ 80, 80, 80, 255 };
 };

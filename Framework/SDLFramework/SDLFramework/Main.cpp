@@ -87,7 +87,7 @@ int main(int args[])
 	camera.look_at() = { 0.f, 0.f, 1.f };
 	camera.near() = 2.f;
 	camera.far() = 100.f;
-	camera.fov() = 40.f;
+	camera.fov() = 80.f;
 	camera.size() = 720.f;
 
 	application->SetCamera(camera);
@@ -99,6 +99,8 @@ int main(int args[])
 	Cube3d cube_a{ 0.f, 0.f, 100.f, 20.f, 20.f, 20.f };
 	Cube3d cube_b{ -100.f, 0.f, 100.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
+
+	cube_b.line_color(Color(255, 0, 0, 255));
 	
 	application->SetTargetFPS(120);
 	application->SetColor(Color(48, 124, 56, 0));
@@ -233,7 +235,7 @@ int main(int args[])
 					cam.look_at() = { 0.f, 0.f, 1.f };
 					cam.near() = 2.f;
 					cam.far() = 100.f;
-					cam.fov() = 40.f;
+					cam.fov() = 80.f;
 					cam.size() = 720.f;
 
 					cube_a.scale_x() = 1.f;

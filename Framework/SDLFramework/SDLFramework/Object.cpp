@@ -139,6 +139,16 @@ Matrix Object::rendered_points() const
 	return _rendered;
 }
 
+const Color & Object::line_color() const
+{
+	return _line_color;
+}
+
+void Object::line_color(const Color & line_color)
+{
+	_line_color = line_color;
+}
+
 void Object::draw_center(const Vec & current) const
 {
 	constexpr int point_size = 5;
@@ -178,6 +188,6 @@ void Object::draw_line(const Vec& last, const Vec& current) const
 	int end_x = static_cast<int>(std::round(current[0]));
 	int end_y = static_cast<int>(std::round(current[1]));
 
-	mApplication->SetColor(Color(80, 80, 80, 255));
+	mApplication->SetColor(_line_color);
 	mApplication->DrawLine(start_x, start_y, end_x, end_y);
 }
