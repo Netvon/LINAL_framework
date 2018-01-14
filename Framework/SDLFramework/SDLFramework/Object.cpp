@@ -1,22 +1,17 @@
 #include "Object.h"
+#include "RandomGenerator.h"
 
 Object::Object(float x, float y, float z, float width, float height, float depth)
 {
-	/*add_point({ 1.f, 1.f, 1.f, 1.f });
-	add_point({ -1.f, 1.f, 1.f, 1.f });
-	add_point({ -1.f, -1.f, 1.f, 1.f });
-	add_point({ 1.f, -1.f, 1.f, 1.f });
-
-	add_point({ 1.f, 1.f, 1.f, -1.f });
-	add_point({ -1.f, 1.f, 1.f, -1.f });
-	add_point({ -1.f, -1.f, 1.f, -1.f });
-	add_point({ 1.f, -1.f, 1.f, -1.f });*/
-
 	Matrix translate(4, 4, true); translate.name("translate");
+	Matrix local_translate(4, 4, true); local_translate.name("local_translate");
 	Matrix size(4, 4, true); size.name("size");
 	Matrix scale(4, 4, true); scale.name("scale");
+	Matrix rotate(4, 4, true); rotate.name("rotate");
 
 	add_transform(translate);
+	add_transform(rotate);
+	add_transform(local_translate);
 	add_transform(size);
 	add_transform(scale);
 
@@ -27,22 +22,6 @@ Object::Object(float x, float y, float z, float width, float height, float depth
 	this->width() = width;
 	this->height() = height;
 	this->depth() = depth;
-
-
-	/*line_draw_order = {
-		{ 0llu, 1llu },
-		{ 0llu, 6llu },
-		{ 3llu, 0llu },
-		{ 3llu, 5llu },
-		{ 3llu, 2llu },
-		{ 2llu, 4llu },
-		{ 4llu, 5llu },
-		{ 4llu, 7llu },
-		{ 2llu, 1llu },
-		{ 7llu, 1llu },
-		{ 6llu, 7llu },
-		{ 6llu, 5llu },
-	};*/
 }
 
 float & Object::x()
@@ -64,6 +43,24 @@ float & Object::z()
 	auto& me = (*this);
 
 	return me("translate")(2, 3);
+}
+
+float & Object::local_x()
+{
+	auto& me = (*this);
+	return me("local_translate")(0, 3);
+}
+
+float & Object::local_y()
+{
+	auto& me = (*this);
+	return me("local_translate")(1, 3);
+}
+
+float & Object::local_z()
+{
+	auto& me = (*this);
+	return me("local_translate")(2, 3);
 }
 
 float & Object::width()
@@ -110,6 +107,8 @@ float & Object::scale_z()
 
 void Object::Update(float deltaTime)
 {
+	/*_rot += 20.f * deltaTime;
+	rotate(_v, _rot);*/
 }
 
 void Object::Draw()
@@ -117,14 +116,13 @@ void Object::Draw()
 	Camera& camera = mApplication->GetCamera();
 	Matrix output = camera.fix(camera.matrix() * transform());
 
-	if (mApplication->IsShowDebug()) {
-		Matrix render_center = camera.fix(camera.matrix() * transform(Vec{ 0.0f, 0.0f, 0.0f, 1.0f }));
-		draw_center(render_center[0]);
+	
+	Matrix render_center = camera.fix(camera.matrix() * transform(Vec{ 0.0f, 0.0f, 0.0f, 1.0f }));
+	draw_center(render_center[0]);
 
 
-		for (auto& rect : output) {
-			draw_rect(rect);
-		}
+	for (auto& rect : output) {
+		draw_rect(rect);
 	}
 
 	for (auto& line : line_draw_order) {
@@ -147,6 +145,65 @@ const Color & Object::line_color() const
 void Object::line_color(const Color & line_color)
 {
 	_line_color = line_color;
+}
+
+void Object::rotate(const Vec3 & around, float angle)
+{
+	float a = angle * (3.141592654f / 180.f);
+	float t1 = atan2f(around.z(), around.x());
+	float t2 = atan2f(around.y(), sqrt(around.x() * around.x() + around.z() * around.z()));
+
+	Matrix mat0{
+		{ 1.f, 0.f, 0.f, 0.f - x() },
+		{ 0.f, 1.f, 0.f, 0.f - y() },
+		{ 0.f, 0.f, 1.f, 0.f - z() },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	Matrix mat1{
+		{ cos(t1), 0.f, sin(t1), 0.f },
+		{ 0.f, 1.f, 0.f, 0.f },
+		{ -sin(t1), 0.f, cos(t1), 0.f },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	Matrix mat2{
+		{ cos(t2), sin(t1), 0.f, 0.f },
+		{ -sin(t2), cos(t2), 0.f, 0.f },
+		{ 0.f, 0.f, 1.f, 0.f },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	Matrix mat3{
+		{ 1.f, 0.f, 0.f, 0.f },
+		{ 0.f, cos(a), -sin(a), 0.f },
+		{ 0.f, sin(a), cos(a), 0.f },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	Matrix mat4{
+		{ cos(t2), -sin(t1), 0.f, 0.f },
+		{ sin(t2), cos(t2), 0.f, 0.f },
+		{ 0.f, 0.f, 1.f, 0.f },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	Matrix mat5{
+		{ cos(t1), 0.f, -sin(t1), 0.f },
+		{ 0.f, 1.f, 0.f, 0.f },
+		{ sin(t1), 0.f, cos(t1), 0.f },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	Matrix mat6{
+		{ 1.f, 0.f, 0.f, x() },
+		{ 0.f, 1.f, 0.f, y() },
+		{ 0.f, 0.f, 1.f, z() },
+		{ 0.f, 0.f, 0.f, 1.f },
+	};
+
+	(*this)("rotate") = mat0 * mat1 * mat2 * mat3 * mat4 * mat5 * mat6;
+	//(*this)("rotate") = mat6 * (mat5 * (mat4 * (mat3 * (mat2 * (mat1 * mat0)))));
 }
 
 void Object::draw_center(const Vec & current) const

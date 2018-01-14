@@ -42,6 +42,7 @@ Matrix::Matrix(std::initializer_list<Vec> init)
 }
 
 Matrix::Matrix(size_t columns, size_t rows, bool identity)
+	: _valid{ true }
 {
 	for (size_t i = 0; i < columns; i++)
 	{

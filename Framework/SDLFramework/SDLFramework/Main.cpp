@@ -124,6 +124,9 @@ int main(int args[])
 	constexpr float movement = 5.0f;
 	constexpr float camera_movement = 1.5f;
 
+	float rotation = 0.f;
+
+
 	while (application->IsRunning())
 	{
 		application->StartTick();
@@ -187,7 +190,7 @@ int main(int args[])
 					application->GetCamera().look_at()[0] -= 0.01f;
 				}
 
-				if (event.key.keysym.scancode == SDL_SCANCODE_W) {
+				/*if (event.key.keysym.scancode == SDL_SCANCODE_W) {
 					application->GetCamera().eye()[1] -= movement;
 					application->GetCamera().look_at()[1] -= movement;
 					cube_a.y() -= movement;
@@ -209,7 +212,7 @@ int main(int args[])
 					application->GetCamera().eye()[0] -= movement;
 					application->GetCamera().look_at()[0] -= movement;
 					cube_a.x() -= movement;
-				}
+				}*/
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
 					application->SetShowDebug(!application->IsShowDebug());
@@ -255,6 +258,53 @@ int main(int args[])
 				break;
 			}
 		}
+
+		SDL_PumpEvents();
+
+		int keys_down;
+		const uint8_t* keys = SDL_GetKeyboardState(&keys_down);
+
+		Vec2 movement_vec{ 0.f, 0.f };
+
+		if (keys[SDL_SCANCODE_W]) {
+			movement_vec.y() = -1.f;
+		}
+
+		if (keys[SDL_SCANCODE_S]) {
+			movement_vec.y() = 1.f;
+		}
+
+		if (keys[SDL_SCANCODE_A]) {
+			movement_vec.x() = 1.f;
+		}
+
+		if (keys[SDL_SCANCODE_D]) {
+			movement_vec.x() = -1.f;
+		}
+
+		if (keys[SDL_SCANCODE_Q]) {
+			rotation -= 1.f;
+		}
+
+		if (keys[SDL_SCANCODE_E]) {
+			rotation += 1.f;
+		}
+
+		if (!movement_vec.zero()) {
+
+			movement_vec = movement_vec.normalize();
+
+			cube_a.x() += movement_vec.x() * movement;
+			cube_a.y() += movement_vec.y() * movement;
+
+			/*application->GetCamera().eye()[0] += movement_vec.x() * movement;
+			application->GetCamera().look_at()[0] += movement_vec.x() * movement;
+
+			application->GetCamera().eye()[1] += movement_vec.y() * movement;
+			application->GetCamera().look_at()[1] += movement_vec.y() * movement;*/
+		}
+
+		cube_a.rotate(Vec3{ 20.f, 20.f, 20.f }, rotation);
 		
 		// For the background
 		application->SetColor(Color(48, 124, 56, 0));

@@ -13,6 +13,7 @@ Cube3d::Cube3d(float x, float y, float z, float width, float height, float depth
 	add_point({ -1.f, -1.f, 1.f, -1.f });
 	add_point({ 1.f, -1.f, 1.f, -1.f });
 
+
 	line_draw_order = {
 		{ 0llu, 1llu },
 		{ 0llu, 6llu },

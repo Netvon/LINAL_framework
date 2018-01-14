@@ -18,6 +18,10 @@ public:
 	float& y();
 	float& z();
 
+	float& local_x();
+	float& local_y();
+	float& local_z();
+
 	float& width();
 	float& height();
 	float& depth();
@@ -37,6 +41,8 @@ public:
 	const Color& line_color() const;
 	void line_color(const Color& line_color);
 
+	void rotate(const Vec3& around, float angle);
+
 
 protected:
 	std::vector<line> line_draw_order;
@@ -48,7 +54,9 @@ private:
 
 	void update_rotation();
 
-	float _rotation = 0.0f;
+	float _rot = 360.0f;
+	Vec3 _v{ 0.f, 0.f, 0.f };
+	Matrix _rotation;
 
 	Matrix _rendered;
 	Color _line_color{ 80, 80, 80, 255 };

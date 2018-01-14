@@ -12,7 +12,7 @@ public:
 
 	typedef std::initializer_list<float> row;
 
-	Matrix() {};
+	Matrix() : _valid{ false } {};
 
 	Matrix(std::initializer_list<row> init);
 	Matrix(std::initializer_list<Vec> init);
