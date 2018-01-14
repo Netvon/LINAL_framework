@@ -33,7 +33,7 @@ public:
 	float& rotation();
 
 	// Inherited via IGameObject
-	virtual void Update(float deltaTime) override;
+	virtual void Update(float deltaTime) override = 0;
 	virtual void Draw() override;
 
 	Matrix rendered_points() const;
@@ -51,8 +51,6 @@ private:
 	void draw_center(const Vec& current) const;
 	void draw_rect(const Vec& current) const;
 	void draw_line(const Vec& last, const Vec& current) const;
-
-	void update_rotation();
 
 	float _rot = 360.0f;
 	Vec3 _v{ 0.f, 0.f, 0.f };

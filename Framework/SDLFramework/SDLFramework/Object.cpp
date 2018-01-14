@@ -105,12 +105,6 @@ float & Object::scale_z()
 	return me("scale")(2, 2);
 }
 
-void Object::Update(float deltaTime)
-{
-	/*_rot += 20.f * deltaTime;
-	rotate(_v, _rot);*/
-}
-
 void Object::Draw()
 {
 	Camera& camera = mApplication->GetCamera();
@@ -148,30 +142,38 @@ void Object::line_color(const Color & line_color)
 }
 
 void Object::rotate(const Vec3 & around, float angle)
-{
-	float a = angle * (3.141592654f / 180.f);
+{	
+	float a = angle * (M_PI / 180.f);
 	float t1 = atan2f(around.z(), around.x());
 	float t2 = atan2f(around.y(), sqrt(around.x() * around.x() + around.z() * around.z()));
 
+	float _x = local_x();
+	float _y = local_y();
+	float _z = local_z();
+
+	/*_z += 20.f;
+	_y += 20.f;
+	_x += 20.f;*/
+
 	Matrix mat0{
-		{ 1.f, 0.f, 0.f, 0.f - x() },
-		{ 0.f, 1.f, 0.f, 0.f - y() },
-		{ 0.f, 0.f, 1.f, 0.f - z() },
+		{ 1.f, 0.f, 0.f, 0.f - _x },
+		{ 0.f, 1.f, 0.f, 0.f - _y },
+		{ 0.f, 0.f, 1.f, 0.f - _z },
 		{ 0.f, 0.f, 0.f, 1.f },
 	};
 
 	Matrix mat1{
-		{ cos(t1), 0.f, sin(t1), 0.f },
-		{ 0.f, 1.f, 0.f, 0.f },
-		{ -sin(t1), 0.f, cos(t1), 0.f },
-		{ 0.f, 0.f, 0.f, 1.f },
+		{ cos(t1) , 0.f, sin(t1) , 0.f },
+		{ 0.f     , 1.f, 0.f     , 0.f },
+		{ -sin(t1), 0.f, cos(t1) , 0.f },
+		{ 0.f     , 0.f, 0.f     , 1.f },
 	};
 
 	Matrix mat2{
-		{ cos(t2), sin(t1), 0.f, 0.f },
+		{ cos(t2) , sin(t2), 0.f, 0.f },
 		{ -sin(t2), cos(t2), 0.f, 0.f },
-		{ 0.f, 0.f, 1.f, 0.f },
-		{ 0.f, 0.f, 0.f, 1.f },
+		{ 0.f     , 0.f    , 1.f, 0.f },
+		{ 0.f     , 0.f    , 0.f, 1.f },
 	};
 
 	Matrix mat3{
@@ -182,7 +184,7 @@ void Object::rotate(const Vec3 & around, float angle)
 	};
 
 	Matrix mat4{
-		{ cos(t2), -sin(t1), 0.f, 0.f },
+		{ cos(t2), -sin(t2), 0.f, 0.f },
 		{ sin(t2), cos(t2), 0.f, 0.f },
 		{ 0.f, 0.f, 1.f, 0.f },
 		{ 0.f, 0.f, 0.f, 1.f },
@@ -196,14 +198,14 @@ void Object::rotate(const Vec3 & around, float angle)
 	};
 
 	Matrix mat6{
-		{ 1.f, 0.f, 0.f, x() },
-		{ 0.f, 1.f, 0.f, y() },
-		{ 0.f, 0.f, 1.f, z() },
+		{ 1.f, 0.f, 0.f, _x },
+		{ 0.f, 1.f, 0.f, _y },
+		{ 0.f, 0.f, 1.f, _y },
 		{ 0.f, 0.f, 0.f, 1.f },
 	};
 
-	(*this)("rotate") = mat0 * mat1 * mat2 * mat3 * mat4 * mat5 * mat6;
-	//(*this)("rotate") = mat6 * (mat5 * (mat4 * (mat3 * (mat2 * (mat1 * mat0)))));
+	//(*this)("rotate") = mat0 * mat1 * mat2 * mat3 * mat4 * mat5 * mat6;
+	(*this)("rotate") = mat6 * (mat5 * (mat4 * (mat3 * (mat2 * (mat1 * mat0)))));
 }
 
 void Object::draw_center(const Vec & current) const

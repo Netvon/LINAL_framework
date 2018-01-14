@@ -17,6 +17,7 @@
 #include "Square2d.h"
 #include "Camera.h"
 #include "Cube3d.h"
+#include "TargetCube.h"
 
 int main(int args[])
 {
@@ -87,7 +88,7 @@ int main(int args[])
 	camera.look_at() = { 0.f, 0.f, 1.f };
 	camera.near() = 2.f;
 	camera.far() = 100.f;
-	camera.fov() = 80.f;
+	camera.fov() = 90.f;
 	camera.size() = 720.f;
 
 	application->SetCamera(camera);
@@ -96,8 +97,8 @@ int main(int args[])
 
 	//auto hmm = camera.fix(camera.matrix() * square.transform());
 
-	Cube3d cube_a{ 0.f, 0.f, 100.f, 20.f, 20.f, 20.f };
-	Cube3d cube_b{ -100.f, 0.f, 100.f, 20.f, 20.f, 20.f };
+	Cube3d cube_a{ 0.f, 0.f, 200.f, 20.f, 20.f, 20.f };
+	TargetCube cube_b{ -100.f, 0.f, 100.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
 
 	cube_b.line_color(Color(255, 0, 0, 255));
@@ -121,7 +122,7 @@ int main(int args[])
 	application->AddRenderable(&cube_b);
 	application->AddRenderable(&cube_c);
 
-	constexpr float movement = 5.0f;
+	constexpr float movement = 5.f;
 	constexpr float camera_movement = 1.5f;
 
 	float rotation = 0.f;
@@ -265,6 +266,7 @@ int main(int args[])
 		const uint8_t* keys = SDL_GetKeyboardState(&keys_down);
 
 		Vec2 movement_vec{ 0.f, 0.f };
+		Vec3 rotation_axis{ 0.f, 1.f, 0.f };
 
 		if (keys[SDL_SCANCODE_W]) {
 			movement_vec.y() = -1.f;
@@ -297,19 +299,28 @@ int main(int args[])
 			cube_a.x() += movement_vec.x() * movement;
 			cube_a.y() += movement_vec.y() * movement;
 
-			/*application->GetCamera().eye()[0] += movement_vec.x() * movement;
+			application->GetCamera().eye()[0] += movement_vec.x() * movement;
 			application->GetCamera().look_at()[0] += movement_vec.x() * movement;
 
 			application->GetCamera().eye()[1] += movement_vec.y() * movement;
-			application->GetCamera().look_at()[1] += movement_vec.y() * movement;*/
+			application->GetCamera().look_at()[1] += movement_vec.y() * movement;
 		}
 
-		cube_a.rotate(Vec3{ 20.f, 20.f, 20.f }, rotation);
+		cube_a.rotate(rotation_axis.normalize(), rotation);
 		
 		// For the background
 		application->SetColor(Color(48, 124, 56, 0));
 
 		
+		//constexpr int point_size = 5;
+		//constexpr int half_point_size = point_size / 2;
+
+		//int end_x = 720 / 2;
+		//int end_y = 720 / 2;
+
+		//application->SetColor(Color(204, 141, 16, 128));
+		//application->DrawRect(end_x - half_point_size, end_y - half_point_size, point_size, point_size, true);
+
 
 		application->UpdateGameObjects();
 		application->RenderGameObjects();

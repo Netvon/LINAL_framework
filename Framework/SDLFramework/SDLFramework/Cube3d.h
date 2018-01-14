@@ -8,4 +8,7 @@ class Cube3d
 public:
 
 	Cube3d(float x, float y, float z, float width, float height, float depth);
+
+	// Inherited via Object
+	virtual void Update(float deltaTime) override;
 };

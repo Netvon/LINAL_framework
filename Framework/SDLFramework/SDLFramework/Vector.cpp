@@ -34,6 +34,12 @@ float Vec::length() const {
 }
 
 Vec Vec::normalize() const {
+	float len = length();
+
+	if (len == 0.f || isnan(len)) {
+		return *this;
+	}
+
 	return (*this) / length();
 }
 
