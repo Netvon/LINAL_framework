@@ -31,6 +31,8 @@ public:
 	float& scale_y();
 	float& scale_z();
 
+	Vec& location();
+
 	// Inherited via IGameObject
 	virtual void Update(float deltaTime) override = 0;
 	virtual void Draw() override;

@@ -183,21 +183,35 @@ int main(int args[])
 		}
 	, 10, 1};
 
+	float bullet1_dist = 0.0f;
+	float bullet2_dist = 0.0f;
+	float bullet3_dist = 0.0f;
+	float bullet_dist = 0.0f;
+
 	DebugDisplay dd2{
-		[&ship]() -> DebugDisplay::debug_list {
+		[&ship, &cube_b, &bullet_dist]() -> DebugDisplay::debug_list {
 
 			std::stringstream pos;
-			pos << "( " << std::setw(8) << std::fixed << std::setprecision(2) << ship.x() 
-				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.y()
-				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.z()
+			pos << "( " << std::setw(8) << std::fixed << std::setprecision(2) << ship.location()[0]
+				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.location()[1]
+				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.location()[2]
 				<< " )";
 
 			std::stringstream speed;
 			speed << std::fixed << std::setw(6) << std::setprecision(2) << ship.velocity().length();
 
+
+			std::stringstream target_dist;
+			target_dist << std::fixed << std::setw(6) << std::setprecision(2) << (ship.location() - cube_b.location()).length();
+
+			std::stringstream b_dist;
+			b_dist << std::fixed << std::setw(6) << std::setprecision(2) << bullet_dist;
+
 			return {
 				std::make_pair("ship speed", speed.str()),
 				std::make_pair("ship pos", pos.str()),
+				std::make_pair("target dist", target_dist.str()),
+				std::make_pair("bullet dist", b_dist.str()),
 			};
 		}
 	, 10, 14};
@@ -455,6 +469,12 @@ int main(int args[])
 			ship.dive() = 0.f;
 			ship.turn() = 0.f;
 		}
+
+		bullet1_dist = (bullet.location() - cube_b.location()).length();
+		bullet2_dist = (bullet2.location() - cube_b.location()).length();
+		bullet3_dist = (bullet3.location() - cube_b.location()).length();
+
+		bullet_dist = std::min(bullet1_dist, std::min(bullet2_dist, bullet3_dist));
 
 		/*ship.reset_rotate();
 		ship.rotate(rotation_axis, rotation);

@@ -111,6 +111,12 @@ float & Object::scale_z()
 	return me("scale")(2, 2);
 }
 
+Vec & Object::location()
+{
+	auto& me = (*this);
+	return me("translate")[3];
+}
+
 void Object::Draw()
 {
 	if (!_visible)
