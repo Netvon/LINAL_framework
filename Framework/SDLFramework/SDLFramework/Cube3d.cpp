@@ -33,4 +33,69 @@ Cube3d::Cube3d(float x, float y, float z, float width, float height, float depth
 
 void Cube3d::Update(float deltaTime)
 {
+	if (_speed == 0.f) {
+		_needs_update = false;
+		_velocity = { 0.0f, 0.0f, 0.0f };
+		return;
+	}
+
+	_velocity = up() * _speed * deltaTime;
+
+	x() += _velocity.x();
+	y() += _velocity.y();
+	z() += _velocity.z();
+
+	if (_speed > 0.f)
+		_speed -= _dampening * deltaTime;
+	else if (_speed < 0.f)
+		_speed += _dampening * deltaTime;
+	
+	if (_speed > 0.f && _speed <= 0.09f) {
+		_speed = 0.f;
+		_velocity = { 0.0f, 0.0f, 0.0f };
+		return;
+	}
+
+	Vec3 roll{ 0.f, 1.f, 0.f };
+	Vec3 dive{ 1.f, 0.f, 0.f };
+	Vec3 rotation_axis{ 0.f, 0.f, 1.f };
+
+	reset_rotate();
+	rotate(rotation_axis, _turn);
+	rotate(roll, _roll);
+	rotate(dive, _dive);
+
+	_needs_update = true;
 }
+
+float & Cube3d::roll()
+{
+	return _roll;
+}
+
+float & Cube3d::dive()
+{
+	return _dive;
+}
+
+float & Cube3d::speed()
+{
+	return _speed;
+}
+
+float & Cube3d::dampening()
+{
+	return _dampening;
+}
+
+float & Cube3d::turn()
+{
+	return _turn;
+}
+
+const Vec3 & Cube3d::velocity() const
+{
+	return _velocity;
+}
+
+

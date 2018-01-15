@@ -13,62 +13,51 @@ Shape::Shape(std::initializer_list<Vec> init)
 Matrix Shape::transform(const Vec & point) const
 {
 	Matrix mat{ point };
-
-	if (!validate_transforms()) {
-		throw std::invalid_argument("Malformed transforms");
-	}
-
-	bool first_done = false;
-	Matrix init = transforms.at(0);
-
-	if (transforms.empty())
-		return init;
-
-	for (const Matrix& mat : transforms) {
-
-		if (!first_done) {
-			first_done = true;
-			continue;
-		}
-
-		init = init * mat;
-	}
-
-	return init * mat;
+	return _transforms * mat;
 }
 
-Matrix Shape::transform() const
+const Matrix& Shape::transform()
 {
-	return std::move(transform({}));
+	return transform({});
 }
 
-Matrix Shape::transform(std::initializer_list<Matrix> remote_transforms) const
+const Matrix& Shape::transform(std::initializer_list<Matrix> remote_transforms)
 {
-	if (!validate_transforms()) {
-		throw std::invalid_argument("Malformed transforms");
-	}
+	if (_needs_update || !has_cache()) {
 
-	bool first_done = false;
-	Matrix init = transforms.at(0);
-
-	if (transforms.empty())
-		return init;
-
-	for (const Matrix& mat : transforms) {
-
-		if (!first_done) {
-			first_done = true;
-			continue;
+		if (!validate_transforms()) {
+			throw std::invalid_argument("Malformed transforms");
 		}
 
-		init = init * mat;
-	}
+		bool first_done = false;
+		Matrix init = transforms.at(0);
 
-	for (const Matrix& mat : remote_transforms) {
-		init = init * mat;
-	}
+		if (transforms.empty())
+			throw std::invalid_argument("Malformed transforms");
 
-	return std::move(init * (*this));
+		for (const Matrix& mat : transforms) {
+
+			if (!first_done) {
+				first_done = true;
+				continue;
+			}
+
+			init = init * mat;
+		}
+
+		for (const Matrix& mat : remote_transforms) {
+			init = init * mat;
+		}
+
+		_cached = init * (*this);
+		_transforms = init;
+		_needs_update = false;
+
+		return _cached;
+	}
+	else {
+		return _cached;
+	}
 }
 
 void Shape::add_point(const Vec & point)
@@ -112,6 +101,11 @@ const Matrix & Shape::operator()(const std::string & name) const
 	}
 
 	throw std::out_of_range("No Transform with that name found");
+}
+
+bool Shape::has_cache() const
+{
+	return _cached.columns() != 0;
 }
 
 bool Shape::validate_transforms() const

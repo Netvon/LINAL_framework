@@ -15,8 +15,8 @@ public:
 	Shape(std::initializer_list<Vec> init);
 
 	Matrix transform(const Vec& point) const;
-	Matrix transform() const;
-	Matrix transform(std::initializer_list<Matrix> remote_transforms) const;
+	const Matrix& transform();
+	const Matrix& transform(std::initializer_list<Matrix> remote_transforms);
 
 	void add_point(const Vec& point);
 	void add_transform(const Matrix& transform);
@@ -26,9 +26,17 @@ public:
 	Matrix& operator()(const std::string& name);
 	const Matrix& operator()(const std::string& name) const;
 
+protected:
+	bool _needs_update = true;
+
+	bool has_cache() const;
+
 private:
 	std::vector<Matrix> transforms;
 
 	bool validate_transforms() const;
+	
+	Matrix _cached;
+	Matrix _transforms;
 };
 

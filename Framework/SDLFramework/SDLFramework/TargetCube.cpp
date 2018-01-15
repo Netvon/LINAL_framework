@@ -33,4 +33,6 @@ void TargetCube::Update(float deltaTime)
 	else if (scale_x() <= pulse_min) {
 		scale_up = true;
 	}
+
+	_needs_update = true;
 }
