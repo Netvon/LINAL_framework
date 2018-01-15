@@ -39,12 +39,12 @@ void Cube3d::Update(float deltaTime)
 		return;
 	}
 
-	if (_speed > 200.f)
-		_speed = 200.f;
-	else if (_speed < -200.f)
-		_speed = -200.f;
+	if (_speed > _vmax)
+		_speed = _vmax;
+	else if (_speed < -_vmax)
+		_speed = -_vmax;
 
-	_velocity = up() * _speed * deltaTime;
+	_velocity = _heading * _speed * deltaTime;
 
 	x() += _velocity.x();
 	y() += _velocity.y();
@@ -91,6 +91,16 @@ float & Cube3d::dampening()
 float & Cube3d::turn()
 {
 	return _turn;
+}
+
+float & Cube3d::vmax()
+{
+	return _vmax;
+}
+
+Vec & Cube3d::heading()
+{
+	return _heading;
 }
 
 const Vec3 & Cube3d::velocity() const

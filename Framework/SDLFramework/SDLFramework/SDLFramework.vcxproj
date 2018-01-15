@@ -115,6 +115,7 @@
     <ClInclude Include="ForceEntity.h" />
     <ClInclude Include="FWApplication.h" />
     <ClInclude Include="IGameObject.h" />
+    <ClInclude Include="Main.h" />
     <ClInclude Include="Matrix.h" />
     <ClInclude Include="Object.h" />
     <ClInclude Include="ObjectWithState.h" />

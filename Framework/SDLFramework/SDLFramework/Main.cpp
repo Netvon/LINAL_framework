@@ -22,6 +22,21 @@
 #include "RandomGenerator.h"
 #include "Bullet.h"
 #include <iomanip>
+#include "Main.h"
+
+void fire_bullet(Cube3d &bullet, Ship &ship)
+{
+	bullet.visible() = true;
+	bullet.heading() = ship.up();
+	bullet.roll() = ship.roll();
+	bullet.dive() = ship.dive();
+	bullet.turn() = ship.turn();
+	bullet.x() = ship.x();
+	bullet.y() = ship.y();
+	bullet.z() = ship.z() + 20.f;
+
+	bullet.speed() = ship.speed() + 100.f;
+}
 
 int main(int args[])
 {
@@ -104,13 +119,29 @@ int main(int args[])
 	Ship ship{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
 	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
-	Cube3d bullet{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
-
 	
+	Cube3d bullet{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
+	bullet.visible() = false;
+	bullet.dampening() = 0.f;
+	bullet.vmax() = 1000.f;
+
+	Cube3d bullet2{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
+	bullet2.visible() = false;
+	bullet2.dampening() = 0.f;
+	bullet2.vmax() = 1000.f;
+
+	Cube3d bullet3{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
+	bullet3.visible() = false;
+	bullet3.dampening() = 0.f;
+	bullet3.vmax() = 1000.f;
+
+	ship.dampening() = 0.f;
+	
+	int bullet_count = 0;
 
 	std::vector<Cube3d> cubes;
 
-	for (size_t i = 0; i < 8; i++)
+	for (size_t i = 0; i < 6; i++)
 	{
 		float x = random(-400.f, 400.f);
 		float y = random(-400.f, 400.f);
@@ -199,6 +230,8 @@ int main(int args[])
 	application->AddRenderable(&cube_b);
 	application->AddRenderable(&cube_c);
 	application->AddRenderable(&bullet);
+	application->AddRenderable(&bullet2);
+	application->AddRenderable(&bullet3);
 
 	constexpr float movement = 10.f;
 	constexpr float camera_movement = 10.f;
@@ -207,6 +240,9 @@ int main(int args[])
 	float roll_angle = 0.f;
 	float z_angle = 0.f;
 	float track_ship = true;
+
+	bool fire = false;
+	bool fire_done = false;
 
 	while (application->IsRunning())
 	{
@@ -358,6 +394,20 @@ int main(int args[])
 					application->GetCamera().fov() -= 0.5f;
 				}
 
+				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
+
+					if (bullet_count == 0)
+						fire_bullet(bullet, ship);
+					else if (bullet_count == 1)
+						fire_bullet(bullet2, ship);
+					else if (bullet_count == 2)
+						fire_bullet(bullet3, ship);
+
+					bullet_count++;
+					if (bullet_count > 2)
+						bullet_count = 0;
+				}
+
 				break;
 			}
 		}
@@ -415,8 +465,10 @@ int main(int args[])
 		//application->GetCamera().eye()[2] = ship.z() - 200.f;
 
 		//if(direction != 0.f)
+		ship.heading() = ship.up();
 		ship.speed() += movement * direction;
-		bullet.speed() += random(-20.f, 20.f);
+
+		//bullet.speed() += movement * direction;
 		
 		// For the background
 		application->SetColor(Color(48, 124, 56, 0));

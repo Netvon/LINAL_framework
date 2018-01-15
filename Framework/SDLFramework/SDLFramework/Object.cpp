@@ -113,6 +113,9 @@ float & Object::scale_z()
 
 void Object::Draw()
 {
+	if (!_visible)
+		return;
+
 	Camera& camera = mApplication->GetCamera();
 	Matrix output = camera.fix(camera.matrix() * transform());
 
@@ -234,6 +237,11 @@ void Object::rotate(const Vec3 & around, float angle)
 void Object::add_line(const Object::line & line)
 {
 	line_draw_order.push_back(line);
+}
+
+bool & Object::visible()
+{
+	return _visible;
 }
 
 void Object::draw_center(const Vec & current) const

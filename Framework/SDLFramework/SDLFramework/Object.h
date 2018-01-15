@@ -45,6 +45,7 @@ public:
 
 	void add_line(const line& line);
 
+	bool& visible();
 
 protected:
 	std::vector<line> line_draw_order;
@@ -57,6 +58,7 @@ private:
 	float _rot = 360.0f;
 	Vec3 _v{ 0.f, 0.f, 0.f };
 	Matrix _rotation;
+	bool _visible{ true };
 
 	Matrix _rendered;
 	Color _line_color{ 80, 80, 80, 255 };

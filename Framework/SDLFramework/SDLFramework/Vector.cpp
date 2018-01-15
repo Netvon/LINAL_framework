@@ -10,7 +10,7 @@ Vec::Vec(size_t amount)
 }
 
 Vec::Vec(std::initializer_list<float> init)
-	: _amount(init.size()), data(init)
+	: _amount(init.size()), data{ init }
 {
 
 }
