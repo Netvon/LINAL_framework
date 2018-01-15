@@ -14,7 +14,7 @@ public:
 	Shape(std::initializer_list<Matrix::row> init);
 	Shape(std::initializer_list<Vec> init);
 
-	Matrix transform(const Vec& point) const;
+	Matrix transform(const Vec& point);
 	const Matrix& transform();
 	const Matrix& transform(std::initializer_list<Matrix> remote_transforms);
 
@@ -25,6 +25,13 @@ public:
 
 	Matrix& operator()(const std::string& name);
 	const Matrix& operator()(const std::string& name) const;
+
+	const Vec& up() const;
+	const Vec& down() const;
+	const Vec& left() const;
+	const Vec& right() const;
+	const Vec& back() const;
+	const Vec& front() const;
 
 protected:
 	bool _needs_update = true;
@@ -38,5 +45,7 @@ private:
 	
 	Matrix _cached;
 	Matrix _transforms;
+
+	Vec _up{ 4 }, _down{ 4 }, _left{ 4 }, _right{ 4 }, _back{ 4 }, _front{ 4 };
 };
 

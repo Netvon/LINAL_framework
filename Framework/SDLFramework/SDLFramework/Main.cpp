@@ -21,6 +21,7 @@
 #include "Ship.h"
 #include "RandomGenerator.h"
 #include "Bullet.h"
+#include <iomanip>
 
 int main(int args[])
 {
@@ -103,21 +104,21 @@ int main(int args[])
 	Ship ship{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
 	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
-	Bullet bullet{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
+	Cube3d bullet{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
+
+	
 
 	std::vector<Cube3d> cubes;
 
-	for (size_t i = 0; i < 5; i++)
+	for (size_t i = 0; i < 8; i++)
 	{
-		float x = random(-300.f, 300.f);
-		float y = random(-300.f, 300.f);
+		float x = random(-400.f, 400.f);
+		float y = random(-400.f, 400.f);
 		float z = random(100.f, 200.f);
 
-		float size = random(10.f, 20.f);
+		float size = random(5.f, 20.f);
 
-		Cube3d gen{ x, y, z, size, size, size };
-
-		cubes.push_back(gen);
+		cubes.push_back(Cube3d{ x, y, z, size, size, size });
 	}
 
 	for (Cube3d& cube : cubes) {
@@ -132,21 +133,72 @@ int main(int args[])
 
 	DebugDisplay dd {
 		[application, &ship]() -> DebugDisplay::debug_list {
+
+			std::stringstream fov;
+			fov << std::fixed << std::setprecision(1) << application->GetCamera().fov();
+
+			std::stringstream fps;
+			fps << std::fixed << std::setprecision(1) << 1.0f / application->DeltaTime();
+
+			std::stringstream time;
+			time << std::fixed << std::setprecision(1) << static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f;
+
 			return {
 				std::make_pair("LINAL", "v0.1"),
-				std::make_pair("Time", std::to_string(static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f)),
-				std::make_pair("dt", std::to_string(1.0f / application->DeltaTime())),
-				std::make_pair("fov", std::to_string(application->GetCamera().fov())),
-				std::make_pair("ship speed", std::to_string(ship.velocity().length())),
+				std::make_pair("Time", time.str()),
+				std::make_pair("fps", fps.str()),
+				std::make_pair("fov", fov.str()),
 			};
 		}
-	};
+	, 10, 1};
+
+	DebugDisplay dd2{
+		[&ship]() -> DebugDisplay::debug_list {
+
+			std::stringstream pos;
+			pos << "( " << std::setw(8) << std::fixed << std::setprecision(2) << ship.x() 
+				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.y()
+				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.z()
+				<< " )";
+
+			std::stringstream speed;
+			speed << std::fixed << std::setw(6) << std::setprecision(2) << ship.velocity().length();
+
+			return {
+				std::make_pair("ship speed", speed.str()),
+				std::make_pair("ship pos", pos.str()),
+			};
+		}
+	, 10, 14};
+
+	/*DebugDisplay dd3{
+		[application, &ship]() -> DebugDisplay::debug_list {
+
+		std::stringstream eye;
+		eye << "( " << std::setw(8) << std::fixed << std::setprecision(4) << application->GetCamera().eye()[0]
+			<< ", " << std::setw(8) << std::fixed << std::setprecision(4) << application->GetCamera().eye()[1]
+			<< " )";
+
+		std::stringstream look_at;
+		look_at << "( " << std::setw(8) << std::fixed << std::setprecision(4) << application->GetCamera().look_at()[0]
+			<< ", " << std::setw(8) << std::fixed << std::setprecision(4) << application->GetCamera().look_at()[1]
+			<< " )";
+
+		return {
+			std::make_pair("eye", eye.str()),
+			std::make_pair("look at", look_at.str()),
+		};
+	}
+	, 10, 28 };*/
 
 	application->AddRenderable(&dd);
+	application->AddRenderable(&dd2);
+	//application->AddRenderable(&dd3);
+
 	application->AddRenderable(&ship);
 	application->AddRenderable(&cube_b);
 	application->AddRenderable(&cube_c);
-	//application->AddRenderable(&bullet);
+	application->AddRenderable(&bullet);
 
 	constexpr float movement = 10.f;
 	constexpr float camera_movement = 10.f;
@@ -315,10 +367,6 @@ int main(int args[])
 		int keys_down;
 		const uint8_t* keys = SDL_GetKeyboardState(&keys_down);
 
-		Vec3 rotation_axis{ 0.f, 0.f, 1.f };
-		Vec3 roll{ 0.f, 1.f, 0.f };
-		Vec3 zdive{ 1.f, 0.f, 0.f };
-
 		float direction = 0.f;
 
 		if (keys[SDL_SCANCODE_LSHIFT]) {
@@ -334,9 +382,6 @@ int main(int args[])
 		}
 		else if (keys[SDL_SCANCODE_S]) {
 			ship.dive() -= 1.f;
-		}
-		else {
-			ship.dive() = 0.f;
 		}
 
 		if (keys[SDL_SCANCODE_A]) {
@@ -357,6 +402,8 @@ int main(int args[])
 
 		if (keys[SDL_SCANCODE_F]) {
 			ship.roll() = 0.f;
+			ship.dive() = 0.f;
+			ship.turn() = 0.f;
 		}
 
 		/*ship.reset_rotate();
@@ -367,7 +414,9 @@ int main(int args[])
 		//application->GetCamera().look_at()[2] = ship.z() - 100.f;
 		//application->GetCamera().eye()[2] = ship.z() - 200.f;
 
+		//if(direction != 0.f)
 		ship.speed() += movement * direction;
+		bullet.speed() += random(-20.f, 20.f);
 		
 		// For the background
 		application->SetColor(Color(48, 124, 56, 0));
@@ -382,7 +431,6 @@ int main(int args[])
 		//application->SetColor(Color(204, 141, 16, 128));
 		//application->DrawRect(end_x - half_point_size, end_y - half_point_size, point_size, point_size, true);
 
-
 		application->UpdateGameObjects();
 		application->RenderGameObjects();
 
@@ -394,11 +442,11 @@ int main(int args[])
 			application->GetCamera().eye()[0] = ship.x();
 			application->GetCamera().look_at()[0] = ship.x();
 
-			application->GetCamera().eye()[1] = ship.y();
-			application->GetCamera().look_at()[1] = ship.y();
+			application->GetCamera().eye()[1] = ship.y() + 160.f;
+			application->GetCamera().look_at()[1] = ship.y() + 159.0f;
 		}
 
-
+		
 	}
 		
 	return EXIT_SUCCESS;
