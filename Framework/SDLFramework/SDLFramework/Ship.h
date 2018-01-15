@@ -10,9 +10,11 @@ public:
 	virtual void Update(float deltaTime) override;
 
 	float& speed();
+	const Vec3& velocity() const;
 
 private:
 
 	float _speed = 0.0f;
+	Vec3 _velocity{ 0.f, 0.f, 0.f };
 };
 

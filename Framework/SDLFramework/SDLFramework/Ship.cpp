@@ -19,11 +19,11 @@ Ship::~Ship()
 
 void Ship::Update(float deltaTime)
 {
-	Vec3 velocity = up() * _speed * deltaTime;
+	_velocity = up() * _speed * deltaTime;
 
-	x() += velocity.x();
-	y() += velocity.y();
-	z() += velocity.z();
+	x() += _velocity.x();
+	y() += _velocity.y();
+	z() += _velocity.z();
 
 	if(_speed > 0.f)
 		_speed -= 30.f * deltaTime;
@@ -34,4 +34,9 @@ void Ship::Update(float deltaTime)
 float & Ship::speed()
 {
 	return _speed;
+}
+
+const Vec3 & Ship::velocity() const
+{
+	return _velocity;
 }
