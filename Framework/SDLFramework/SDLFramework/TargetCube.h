@@ -8,5 +8,8 @@ public:
 	~TargetCube();
 
 	virtual void Update(float deltaTime) override;
+
+private:
+	bool scale_up{ true };
 };
 

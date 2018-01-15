@@ -57,6 +57,7 @@ float & Object::local_y()
 	return me("local_translate")(1, 3);
 }
 
+
 float & Object::local_z()
 {
 	auto& me = (*this);
@@ -105,6 +106,72 @@ float & Object::scale_z()
 	return me("scale")(2, 2);
 }
 
+Vec Object::left() const
+{
+	Vec a{ 1.f, 0.f, 0.f, 0.f };
+
+	Vec a_t = transform(a)[0];
+
+	Vec norm = a_t.normalize();
+
+	return norm;
+}
+
+Vec Object::right() const
+{
+	Vec a{ -1.f, 0.f, 0.f, 0.f };
+
+	Vec a_t = transform(a)[0];
+
+	Vec norm = a_t.normalize();
+
+	return norm;
+}
+
+Vec Object::down() const
+{
+	Vec a{ 0.f, 1.f, 0.f, 0.f };
+
+	Vec a_t = transform(a)[0];
+
+	Vec norm = a_t.normalize();
+
+	return norm;
+}
+
+Vec Object::up() const
+{
+	Vec a{ 0.f, -1.f, 0.f, 0.f };
+
+	Vec a_t = transform(a)[0];
+
+	Vec norm = a_t.normalize();
+
+	return norm;
+}
+
+Vec Object::back() const
+{
+	Vec a{ 0.f, 0.f, 1.f, 0.f };
+
+	Vec a_t = transform(a)[0];
+
+	Vec norm = a_t.normalize();
+
+	return norm;
+}
+
+Vec Object::front() const
+{
+	Vec a{ 0.f, 0.f, -1.f, 0.f };
+
+	Vec a_t = transform(a)[0];
+
+	Vec norm = a_t.normalize();
+
+	return norm;
+}
+
 void Object::Draw()
 {
 	Camera& camera = mApplication->GetCamera();
@@ -120,7 +187,11 @@ void Object::Draw()
 	}
 
 	for (auto& line : line_draw_order) {
-		draw_line(output[line.a], output[line.b]);
+
+		Vec4 a = output[line.a];
+		Vec4 b = output[line.b];
+
+		draw_line(a, b);
 	}
 
 	_rendered = output;
@@ -139,6 +210,11 @@ const Color & Object::line_color() const
 void Object::line_color(const Color & line_color)
 {
 	_line_color = line_color;
+}
+
+void Object::reset_rotate()
+{
+	(*this)("rotate") = Matrix(4, 4, true);
 }
 
 void Object::rotate(const Vec3 & around, float angle)
@@ -205,7 +281,12 @@ void Object::rotate(const Vec3 & around, float angle)
 	};
 
 	//(*this)("rotate") = mat0 * mat1 * mat2 * mat3 * mat4 * mat5 * mat6;
-	(*this)("rotate") = mat6 * (mat5 * (mat4 * (mat3 * (mat2 * (mat1 * mat0)))));
+	(*this)("rotate") = (*this)("rotate") * ( mat6 * (mat5 * (mat4 * (mat3 * (mat2 * (mat1 * mat0))))));
+}
+
+void Object::add_line(const Object::line & line)
+{
+	line_draw_order.push_back(line);
 }
 
 void Object::draw_center(const Vec & current) const

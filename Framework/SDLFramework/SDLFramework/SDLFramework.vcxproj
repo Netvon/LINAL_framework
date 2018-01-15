@@ -97,6 +97,7 @@
     <ClCompile Include="Object.cpp" />
     <ClCompile Include="RandomGenerator.cpp" />
     <ClCompile Include="Shape.cpp" />
+    <ClCompile Include="Ship.cpp" />
     <ClCompile Include="Square2d.cpp" />
     <ClCompile Include="TargetCube.cpp" />
     <ClCompile Include="Vector.cpp" />
@@ -117,6 +118,7 @@
     <ClInclude Include="ObjectWithState.h" />
     <ClInclude Include="RandomGenerator.h" />
     <ClInclude Include="Shape.h" />
+    <ClInclude Include="Ship.h" />
     <ClInclude Include="Square2d.h" />
     <ClInclude Include="State.h" />
     <ClInclude Include="TargetCube.h" />

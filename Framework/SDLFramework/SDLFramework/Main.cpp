@@ -18,6 +18,7 @@
 #include "Camera.h"
 #include "Cube3d.h"
 #include "TargetCube.h"
+#include "Ship.h"
 
 int main(int args[])
 {
@@ -97,8 +98,8 @@ int main(int args[])
 
 	//auto hmm = camera.fix(camera.matrix() * square.transform());
 
-	Cube3d cube_a{ 0.f, 0.f, 200.f, 20.f, 20.f, 20.f };
-	TargetCube cube_b{ -100.f, 0.f, 100.f, 20.f, 20.f, 20.f };
+	Ship ship{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
+	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
 
 	cube_b.line_color(Color(255, 0, 0, 255));
@@ -108,7 +109,7 @@ int main(int args[])
 
 
 	DebugDisplay dd {
-		[application, &cube_a]() -> DebugDisplay::debug_list {
+		[application, &ship]() -> DebugDisplay::debug_list {
 			return {
 				std::make_pair("LINAL", "v0.1"),
 				std::make_pair("Time", std::to_string(static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f)),
@@ -118,15 +119,15 @@ int main(int args[])
 	};
 
 	application->AddRenderable(&dd);
-	application->AddRenderable(&cube_a);
+	application->AddRenderable(&ship);
 	application->AddRenderable(&cube_b);
 	application->AddRenderable(&cube_c);
 
-	constexpr float movement = 5.f;
+	constexpr float movement = 30.f;
 	constexpr float camera_movement = 1.5f;
 
 	float rotation = 0.f;
-
+	float roll_angle = 0.f;
 
 	while (application->IsRunning())
 	{
@@ -140,9 +141,9 @@ int main(int args[])
 			{
 			case SDL_MOUSEWHEEL:
 				if (event.wheel.x == 1)
-					cube_a.z() += 0.1f;
+					ship.z() += 0.1f;
 				else if (event.wheel.x == -1)
-					cube_a.z() -= 0.1f;
+					ship.z() -= 0.1f;
 				else {
 					std::cout << event.wheel.x;
 				}
@@ -220,15 +221,15 @@ int main(int args[])
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_Z) {
-					cube_a.scale_x() += 0.1f;
-					cube_a.scale_y() += 0.1f;
-					cube_a.scale_z() += 0.1f;
+					ship.scale_x() += 0.1f;
+					ship.scale_y() += 0.1f;
+					ship.scale_z() += 0.1f;
 				}
 
 				if (event.key.keysym.scancode == SDL_SCANCODE_X) {
-					cube_a.scale_x() -= 0.1f;
-					cube_a.scale_y() -= 0.1f;
-					cube_a.scale_z() -= 0.1f;
+					ship.scale_x() -= 0.1f;
+					ship.scale_y() -= 0.1f;
+					ship.scale_z() -= 0.1f;
 				}
 
 
@@ -242,9 +243,9 @@ int main(int args[])
 					cam.fov() = 80.f;
 					cam.size() = 720.f;
 
-					cube_a.scale_x() = 1.f;
-					cube_a.scale_y() = 1.f;
-					cube_a.scale_z() = 1.f;
+					ship.scale_x() = 1.f;
+					ship.scale_y() = 1.f;
+					ship.scale_z() = 1.f;
 				}
 
 
@@ -265,48 +266,48 @@ int main(int args[])
 		int keys_down;
 		const uint8_t* keys = SDL_GetKeyboardState(&keys_down);
 
-		Vec2 movement_vec{ 0.f, 0.f };
-		Vec3 rotation_axis{ 0.f, 1.f, 0.f };
+		Vec3 rotation_axis{ 0.f, 0.f, 1.f };
+
+		Vec3 roll{ 0.f, 1.f, 0.f };
+
+		float direction = 0.f;
 
 		if (keys[SDL_SCANCODE_W]) {
-			movement_vec.y() = -1.f;
+			direction = 1.f;
 		}
 
 		if (keys[SDL_SCANCODE_S]) {
-			movement_vec.y() = 1.f;
+			direction = -1.f;
 		}
 
 		if (keys[SDL_SCANCODE_A]) {
-			movement_vec.x() = 1.f;
+			rotation += 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_D]) {
-			movement_vec.x() = -1.f;
+			rotation -= 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_Q]) {
-			rotation -= 1.f;
+			roll_angle += 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_E]) {
-			rotation += 1.f;
+			roll_angle -= 2.5f;
 		}
 
-		if (!movement_vec.zero()) {
-
-			movement_vec = movement_vec.normalize();
-
-			cube_a.x() += movement_vec.x() * movement;
-			cube_a.y() += movement_vec.y() * movement;
-
-			application->GetCamera().eye()[0] += movement_vec.x() * movement;
-			application->GetCamera().look_at()[0] += movement_vec.x() * movement;
-
-			application->GetCamera().eye()[1] += movement_vec.y() * movement;
-			application->GetCamera().look_at()[1] += movement_vec.y() * movement;
+		if (keys[SDL_SCANCODE_F]) {
+			roll_angle = 0.f;
 		}
 
-		cube_a.rotate(rotation_axis.normalize(), rotation);
+		ship.reset_rotate();
+		ship.rotate(rotation_axis.normalize(), rotation);
+		ship.rotate(roll.normalize(), roll_angle);
+
+		//application->GetCamera().look_at()[2] = ship.z() - 100.f;
+		//application->GetCamera().eye()[2] = ship.z() - 200.f;
+
+		ship.speed() += movement * direction;
 		
 		// For the background
 		application->SetColor(Color(48, 124, 56, 0));
@@ -328,6 +329,12 @@ int main(int args[])
 		application->SetColor(Color(200, 200, 200, 255));
 
 		application->EndTick();
+
+		application->GetCamera().eye()[0] = ship.x();
+		application->GetCamera().look_at()[0] = ship.x();
+
+		application->GetCamera().eye()[1] = ship.y();
+		application->GetCamera().look_at()[1] = ship.y();
 
 
 	}

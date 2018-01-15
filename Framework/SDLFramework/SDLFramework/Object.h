@@ -30,7 +30,12 @@ public:
 	float& scale_y();
 	float& scale_z();
 
-	float& rotation();
+	Vec left() const;
+	Vec right() const;
+	Vec down() const;
+	Vec up() const;
+	Vec back() const;
+	Vec front() const;
 
 	// Inherited via IGameObject
 	virtual void Update(float deltaTime) override = 0;
@@ -41,7 +46,10 @@ public:
 	const Color& line_color() const;
 	void line_color(const Color& line_color);
 
+	void reset_rotate();
 	void rotate(const Vec3& around, float angle);
+
+	void add_line(const line& line);
 
 
 protected:

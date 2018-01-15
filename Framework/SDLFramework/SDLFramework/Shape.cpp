@@ -10,7 +10,7 @@ Shape::Shape(std::initializer_list<Vec> init)
 {
 }
 
-Matrix Shape::transform(const Vec & point)
+Matrix Shape::transform(const Vec & point) const
 {
 	Matrix mat{ point };
 

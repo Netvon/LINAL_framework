@@ -12,14 +12,25 @@ TargetCube::~TargetCube()
 
 void TargetCube::Update(float deltaTime)
 {
-	if (scale_x() <= 1.f) {
-		scale_x() += 0.1f * deltaTime;
-		scale_y() += 0.1f * deltaTime;
-		scale_x() += 0.1f * deltaTime;
+	constexpr float pulse_speed = 1.5f;
+	constexpr float pulse_max = 1.5f;
+	constexpr float pulse_min = 0.5f;
+
+	if (scale_up) {
+		scale_x() += pulse_speed * deltaTime;
+		scale_y() += pulse_speed * deltaTime;
+		scale_z() += pulse_speed * deltaTime;
 	}
-	else if( scale_x() >= 2.f) {
-		scale_x() -= 0.1f * deltaTime;
-		scale_y() -= 0.1f * deltaTime;
-		scale_x() -= 0.1f * deltaTime;
+	else {
+		scale_x() -= pulse_speed * deltaTime;
+		scale_y() -= pulse_speed * deltaTime;
+		scale_z() -= pulse_speed * deltaTime;
+	}
+
+	if (scale_x() >= pulse_max) {
+		scale_up = false;
+	}
+	else if (scale_x() <= pulse_min) {
+		scale_up = true;
 	}
 }
