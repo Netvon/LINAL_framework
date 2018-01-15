@@ -31,13 +31,6 @@ public:
 	float& scale_y();
 	float& scale_z();
 
-	Vec left() const;
-	Vec right() const;
-	Vec down() const;
-	Vec up() const;
-	Vec back() const;
-	Vec front() const;
-
 	// Inherited via IGameObject
 	virtual void Update(float deltaTime) override = 0;
 	virtual void Draw() override;

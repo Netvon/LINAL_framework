@@ -15,6 +15,7 @@ public:
 	float& dampening();
 	float& turn();
 	const Vec3& velocity() const;
+	void is_active(bool value);
 
 	// Inherited via Object
 	virtual void Update(float deltaTime) override;
@@ -29,4 +30,5 @@ private:
 	Vec3 roll_axis{ 0.f, 1.f, 0.f };
 	Vec3 dive_axis{ 1.f, 0.f, 0.f };
 	Vec3 rotation_axis{ 0.f, 0.f, 1.f };
+	Vec3 heading{ 0.f,0.f,0.f };
 };

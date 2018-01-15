@@ -61,14 +61,11 @@ void Cube3d::Update(float deltaTime)
 		return;
 	}
 
-	if (_turn != 0.f || _roll != 0.f || _dive != 0.f) {
-		reset_rotate();
-		_needs_update = true;
-	}
-
+	reset_rotate();
 	rotate(rotation_axis, _turn);
 	rotate(roll_axis, _roll);
 	rotate(dive_axis, _dive);
+	_needs_update = true;
 }
 
 float & Cube3d::roll()
@@ -99,6 +96,11 @@ float & Cube3d::turn()
 const Vec3 & Cube3d::velocity() const
 {
 	return _velocity;
+}
+
+void Cube3d::is_active(bool value)
+{
+	_needs_update = value;
 }
 
 

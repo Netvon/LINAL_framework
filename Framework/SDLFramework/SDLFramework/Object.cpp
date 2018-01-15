@@ -111,72 +111,6 @@ float & Object::scale_z()
 	return me("scale")(2, 2);
 }
 
-Vec Object::left() const
-{
-	Vec a{ 1.f, 0.f, 0.f, 0.f };
-
-	Vec a_t = transform(a)[0];
-
-	Vec norm = a_t.normalize();
-
-	return norm;
-}
-
-Vec Object::right() const
-{
-	Vec a{ -1.f, 0.f, 0.f, 0.f };
-
-	Vec a_t = transform(a)[0];
-
-	Vec norm = a_t.normalize();
-
-	return norm;
-}
-
-Vec Object::down() const
-{
-	Vec a{ 0.f, 1.f, 0.f, 0.f };
-
-	Vec a_t = transform(a)[0];
-
-	Vec norm = a_t.normalize();
-
-	return norm;
-}
-
-Vec Object::up() const
-{
-	Vec a{ 0.f, -1.f, 0.f, 0.f };
-
-	Vec a_t = transform(a)[0];
-
-	Vec norm = a_t.normalize();
-
-	return norm;
-}
-
-Vec Object::back() const
-{
-	Vec a{ 0.f, 0.f, 1.f, 0.f };
-
-	Vec a_t = transform(a)[0];
-
-	Vec norm = a_t.normalize();
-
-	return norm;
-}
-
-Vec Object::front() const
-{
-	Vec a{ 0.f, 0.f, -1.f, 0.f };
-
-	Vec a_t = transform(a)[0];
-
-	Vec norm = a_t.normalize();
-
-	return norm;
-}
-
 void Object::Draw()
 {
 	Camera& camera = mApplication->GetCamera();
@@ -188,7 +122,7 @@ void Object::Draw()
 
 
 	for (auto& rect : output) {
-		if (rect[3] < 0.f)
+		if (rect[1] < 0.f)
 			continue;
 
 		draw_rect(rect);
@@ -198,8 +132,8 @@ void Object::Draw()
 		Vec& a = output[line.a];
 		Vec& b = output[line.b];
 
-		/*if (a[3] < 0.f || b[3] < 0.f)
-			continue;*/
+		if (a[1] < 0.f || b[1] < 0.f)
+			continue;
 
 		draw_line(a, b);
 	}
