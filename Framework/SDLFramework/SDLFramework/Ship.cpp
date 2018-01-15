@@ -26,14 +26,43 @@ void Ship::Update(float deltaTime)
 	z() += _velocity.z();
 
 	if(_speed > 0.f)
-		_speed -= 30.f * deltaTime;
+		_speed -= _dampening * deltaTime;
 	else if (_speed < 0.f)
-		_speed += 30.f * deltaTime;
+		_speed += _dampening * deltaTime;
+
+	Vec3 roll{ 0.f, 1.f, 0.f };
+	Vec3 dive{ 1.f, 0.f, 0.f };
+	Vec3 rotation_axis{ 0.f, 0.f, 1.f };
+
+	reset_rotate();
+	rotate(rotation_axis, _turn);
+	rotate(roll, _roll);
+	rotate(dive, _dive);
+}
+
+float & Ship::roll()
+{
+	return _roll;
+}
+
+float & Ship::dive()
+{
+	return _dive;
 }
 
 float & Ship::speed()
 {
 	return _speed;
+}
+
+float & Ship::dampening()
+{
+	return _dampening;
+}
+
+float & Ship::turn()
+{
+	return _turn;
 }
 
 const Vec3 & Ship::velocity() const

@@ -306,39 +306,39 @@ int main(int args[])
 		}
 
 		if (keys[SDL_SCANCODE_W]) {
-			z_angle += 1.f;
+			ship.dive() += 1.f;
 		}
 		else if (keys[SDL_SCANCODE_S]) {
-			z_angle -= 1.f;
+			ship.dive() -= 1.f;
 		}
 		else {
-			z_angle = 0.f;
+			ship.dive() = 0.f;
 		}
 
 		if (keys[SDL_SCANCODE_A]) {
-			rotation += 2.5f;
+			ship.turn() += 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_D]) {
-			rotation -= 2.5f;
+			ship.turn() -= 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_Q]) {
-			roll_angle += 2.5f;
+			ship.roll() += 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_E]) {
-			roll_angle -= 2.5f;
+			ship.roll() -= 2.5f;
 		}
 
 		if (keys[SDL_SCANCODE_F]) {
-			roll_angle = 0.f;
+			ship.roll() = 0.f;
 		}
 
-		ship.reset_rotate();
+		/*ship.reset_rotate();
 		ship.rotate(rotation_axis, rotation);
 		ship.rotate(roll, roll_angle);
-		ship.rotate(zdive, z_angle);
+		ship.rotate(zdive, z_angle);*/
 
 		//application->GetCamera().look_at()[2] = ship.z() - 100.f;
 		//application->GetCamera().eye()[2] = ship.z() - 200.f;
