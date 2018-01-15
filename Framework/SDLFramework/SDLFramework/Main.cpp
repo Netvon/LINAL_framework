@@ -21,6 +21,7 @@
 #include "Ship.h"
 #include "RandomGenerator.h"
 #include "Bullet.h"
+#include <iomanip>
 
 int main(int args[])
 {
@@ -132,17 +133,46 @@ int main(int args[])
 
 	DebugDisplay dd {
 		[application, &ship]() -> DebugDisplay::debug_list {
+
+			std::stringstream fov;
+			fov << std::fixed << std::setprecision(1) << application->GetCamera().fov();
+
+			std::stringstream fps;
+			fps << std::fixed << std::setprecision(1) << 1.0f / application->DeltaTime();
+
+			std::stringstream time;
+			time << std::fixed << std::setprecision(1) << static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f;
+
 			return {
 				std::make_pair("LINAL", "v0.1"),
-				std::make_pair("Time", std::to_string(static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f)),
-				std::make_pair("dt", std::to_string(1.0f / application->DeltaTime())),
-				std::make_pair("fov", std::to_string(application->GetCamera().fov())),
-				std::make_pair("ship speed", std::to_string(ship.velocity().length())),
+				std::make_pair("Time", time.str()),
+				std::make_pair("fps", fps.str()),
+				std::make_pair("fov", fov.str()),
 			};
 		}
-	};
+	, 10, 1};
+
+	DebugDisplay dd2{
+		[&ship]() -> DebugDisplay::debug_list {
+
+			std::stringstream pos;
+			pos << "( " << std::setw(8) << std::fixed << std::setprecision(2) << ship.x() 
+				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.y()
+				<< ", " << std::setw(8) << std::fixed << std::setprecision(2) << ship.z()
+				<< " )";
+
+			std::stringstream speed;
+			speed << std::fixed << std::setw(6) << std::setprecision(2) << ship.velocity().length();
+
+			return {
+				std::make_pair("ship speed", speed.str()),
+				std::make_pair("ship pos", pos.str()),
+			};
+		}
+	, 10, 14};
 
 	application->AddRenderable(&dd);
+	application->AddRenderable(&dd2);
 	application->AddRenderable(&ship);
 	application->AddRenderable(&cube_b);
 	application->AddRenderable(&cube_c);
@@ -315,10 +345,6 @@ int main(int args[])
 		int keys_down;
 		const uint8_t* keys = SDL_GetKeyboardState(&keys_down);
 
-		Vec3 rotation_axis{ 0.f, 0.f, 1.f };
-		Vec3 roll{ 0.f, 1.f, 0.f };
-		Vec3 zdive{ 1.f, 0.f, 0.f };
-
 		float direction = 0.f;
 
 		if (keys[SDL_SCANCODE_LSHIFT]) {
@@ -334,9 +360,6 @@ int main(int args[])
 		}
 		else if (keys[SDL_SCANCODE_S]) {
 			ship.dive() -= 1.f;
-		}
-		else {
-			ship.dive() = 0.f;
 		}
 
 		if (keys[SDL_SCANCODE_A]) {
@@ -367,6 +390,7 @@ int main(int args[])
 		//application->GetCamera().look_at()[2] = ship.z() - 100.f;
 		//application->GetCamera().eye()[2] = ship.z() - 200.f;
 
+		//if(direction != 0.f)
 		ship.speed() += movement * direction;
 		
 		// For the background

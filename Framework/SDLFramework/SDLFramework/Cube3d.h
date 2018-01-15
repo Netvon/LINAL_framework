@@ -25,4 +25,8 @@ private:
 	float _dampening{ 30.f };
 	float _turn{ 0.f };
 	Vec3 _velocity{ 0.f, 0.f, 0.f };
+
+	Vec3 roll_axis{ 0.f, 1.f, 0.f };
+	Vec3 dive_axis{ 1.f, 0.f, 0.f };
+	Vec3 rotation_axis{ 0.f, 0.f, 1.f };
 };

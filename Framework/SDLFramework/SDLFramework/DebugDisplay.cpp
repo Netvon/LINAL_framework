@@ -1,8 +1,8 @@
 #include "DebugDisplay.h"
 
 
-DebugDisplay::DebugDisplay(std::function<debug_list(void)> create_list)
-	: create_list(create_list)
+DebugDisplay::DebugDisplay(std::function<debug_list(void)> create_list, int y_offset, int x_offset)
+	: create_list(create_list), _y_offset { y_offset }, _x_offset{ x_offset }
 {
 }
 
@@ -15,7 +15,7 @@ void DebugDisplay::Update(float deltaTime)
 void DebugDisplay::Draw()
 {
 	int count = 0;
-	Rect last{ 5, 1, 0,0 };
+	Rect last{ _y_offset, _x_offset, 0,0 };
 	for (auto& entry : current) {
 		int offset = 15;
 

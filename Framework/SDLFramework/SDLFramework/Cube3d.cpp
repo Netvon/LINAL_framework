@@ -33,11 +33,16 @@ Cube3d::Cube3d(float x, float y, float z, float width, float height, float depth
 
 void Cube3d::Update(float deltaTime)
 {
-	if (_speed == 0.f) {
+	if (_speed == 0.f && !(_turn != 0.f || _roll != 0.f || _dive != 0.f)) {
 		_needs_update = false;
 		_velocity = { 0.0f, 0.0f, 0.0f };
 		return;
 	}
+
+	if (_speed > 200.f)
+		_speed = 200.f;
+	else if (_speed < -200.f)
+		_speed = -200.f;
 
 	_velocity = up() * _speed * deltaTime;
 
@@ -56,16 +61,14 @@ void Cube3d::Update(float deltaTime)
 		return;
 	}
 
-	Vec3 roll{ 0.f, 1.f, 0.f };
-	Vec3 dive{ 1.f, 0.f, 0.f };
-	Vec3 rotation_axis{ 0.f, 0.f, 1.f };
+	if (_turn != 0.f || _roll != 0.f || _dive != 0.f) {
+		reset_rotate();
+		_needs_update = true;
+	}
 
-	reset_rotate();
 	rotate(rotation_axis, _turn);
-	rotate(roll, _roll);
-	rotate(dive, _dive);
-
-	_needs_update = true;
+	rotate(roll_axis, _roll);
+	rotate(dive_axis, _dive);
 }
 
 float & Cube3d::roll()

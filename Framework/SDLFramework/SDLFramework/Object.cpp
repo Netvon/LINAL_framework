@@ -188,13 +188,18 @@ void Object::Draw()
 
 
 	for (auto& rect : output) {
+		if (rect[3] < 0.f)
+			continue;
+
 		draw_rect(rect);
 	}
 
 	for (auto& line : line_draw_order) {
+		Vec& a = output[line.a];
+		Vec& b = output[line.b];
 
-		Vec4 a = output[line.a];
-		Vec4 b = output[line.b];
+		/*if (a[3] < 0.f || b[3] < 0.f)
+			continue;*/
 
 		draw_line(a, b);
 	}
@@ -231,20 +236,20 @@ void Object::rotate(const Vec3 & around, float angle)
 	float t1 = atan2f(around.z(), around.x());
 	float t2 = atan2f(around.y(), sqrt(around.x() * around.x() + around.z() * around.z()));
 
-	float _x = local_x();
-	float _y = local_y();
-	float _z = local_z();
+	/*float _x = x();
+	float _y = y();
+	float _z = z();*/
 
 	/*_z += 20.f;
 	_y += 20.f;
 	_x += 20.f;*/
 
-	Matrix mat0{
+	/*Matrix mat0{
 		{ 1.f, 0.f, 0.f, 0.f - _x },
 		{ 0.f, 1.f, 0.f, 0.f - _y },
 		{ 0.f, 0.f, 1.f, 0.f - _z },
 		{ 0.f, 0.f, 0.f, 1.f },
-	};
+	};*/
 
 	Matrix mat1{
 		{ cos(t1) , 0.f, sin(t1) , 0.f },
@@ -281,15 +286,15 @@ void Object::rotate(const Vec3 & around, float angle)
 		{ 0.f, 0.f, 0.f, 1.f },
 	};
 
-	Matrix mat6{
+	/*Matrix mat6{
 		{ 1.f, 0.f, 0.f, _x },
 		{ 0.f, 1.f, 0.f, _y },
 		{ 0.f, 0.f, 1.f, _y },
 		{ 0.f, 0.f, 0.f, 1.f },
-	};
+	};*/
 
 	//(*this)("rotate") = mat0 * mat1 * mat2 * mat3 * mat4 * mat5 * mat6;
-	(*this)("rotate") = (*this)("rotate") * ( mat6 * (mat5 * (mat4 * (mat3 * (mat2 * (mat1 * mat0))))));
+	(*this)("rotate") = (*this)("rotate") * ( /*mat6 **/ (mat5 * (mat4 * (mat3 * (mat2 * (mat1 /** mat0*/))))));
 }
 
 void Object::add_line(const Object::line & line)

@@ -86,6 +86,8 @@ Matrix Camera::fix(const Matrix & from) const
 
 		float x = (_size / 2.f) + (((vector.x()/* + 1.f*/) / vector.w()) * _size * 0.5f) + (_size / extra);
 		float y = (_size / 2.f) + (((vector.y()/* + 1.f*/) / vector.w()) * _size * 0.5f) + (_size / extra);
+		/*float x = (_size / 2.f) + (((vector.x() + 1.f) / vector.w()) * _size * 0.5f);
+		float y = (_size / 2.f) + (((vector.y() + 1.f) / vector.w()) * _size * 0.5f);*/
 		float z = -vector.z();
 
 		temp[index] = Vec({ x, y, z, vector.w() });
