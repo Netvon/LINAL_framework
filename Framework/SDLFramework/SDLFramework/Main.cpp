@@ -442,8 +442,8 @@ int main(int args[])
 			application->GetCamera().eye()[0] = ship.x();
 			application->GetCamera().look_at()[0] = ship.x();
 
-			application->GetCamera().eye()[1] = ship.y() + 160.5f;
-			application->GetCamera().look_at()[1] = ship.y() + 159.5f;
+			application->GetCamera().eye()[1] = ship.y() + 160.f;
+			application->GetCamera().look_at()[1] = ship.y() + 159.0f;
 		}
 
 		
