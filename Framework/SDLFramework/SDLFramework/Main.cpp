@@ -19,6 +19,7 @@
 #include "Cube3d.h"
 #include "TargetCube.h"
 #include "Ship.h"
+#include "RandomGenerator.h"
 
 int main(int args[])
 {
@@ -102,9 +103,28 @@ int main(int args[])
 	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
 
+	std::vector<Cube3d> cubes;
+
+	for (size_t i = 0; i < 5; i++)
+	{
+		float x = random(-300.f, 300.f);
+		float y = random(-300.f, 300.f);
+		float z = random(100.f, 200.f);
+
+		float size = random(10.f, 20.f);
+
+		Cube3d gen{ x, y, z, size, size, size };
+
+		cubes.push_back(gen);
+	}
+
+	for (Cube3d& cube : cubes) {
+		application->AddRenderable(&cube);
+	}
+
 	cube_b.line_color(Color(255, 0, 0, 255));
 	
-	application->SetTargetFPS(120);
+	application->SetTargetFPS(60);
 	application->SetColor(Color(48, 124, 56, 0));
 
 
@@ -113,6 +133,7 @@ int main(int args[])
 			return {
 				std::make_pair("LINAL", "v0.1"),
 				std::make_pair("Time", std::to_string(static_cast<float>(application->GetTimeSinceStartedMS()) / 1000.f)),
+				std::make_pair("dt", std::to_string(1.0f / application->DeltaTime())),
 				std::make_pair("fov", std::to_string(application->GetCamera().fov())),
 				std::make_pair("ship speed", std::to_string(ship.velocity().length())),
 			};

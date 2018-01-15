@@ -411,6 +411,11 @@ void FWApplication::SetShowDebug(bool value)
 	show_debug = value;
 }
 
+float FWApplication::DeltaTime() const
+{
+	return static_cast<float>(mDeltaTimeMS) / 1000.0f;
+}
+
 
 //void FWApplication::AddOnEvent(std::function<void(SDL_Event*)> func)
 //{

@@ -12,6 +12,7 @@ public:
 		size_t a, b;
 	};
 
+	Object(const Object& other);
 	Object(float x, float y, float z, float width, float height, float depth);
 
 	float& x();

@@ -256,6 +256,8 @@ public:
 	bool IsShowDebug() const;
 	void SetShowDebug(bool value);
 
+	float DeltaTime() const;
+
 private:
 	std::vector<IGameObject *> mGameObjects;
 	static FWApplication * mInstance;
@@ -267,6 +269,7 @@ private:
 	uint32_t mTargetDelayMS;
 	uint32_t mStartCycleTimeMS;
 	uint32_t mDeltaTimeMS; // The actual loop cycle time
+
 
 	bool mIsRunning;
 

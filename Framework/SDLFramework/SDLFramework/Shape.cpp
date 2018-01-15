@@ -39,7 +39,7 @@ Matrix Shape::transform(const Vec & point) const
 
 Matrix Shape::transform() const
 {
-	return transform({});
+	return std::move(transform({}));
 }
 
 Matrix Shape::transform(std::initializer_list<Matrix> remote_transforms) const
@@ -68,7 +68,7 @@ Matrix Shape::transform(std::initializer_list<Matrix> remote_transforms) const
 		init = init * mat;
 	}
 
-	return init * (*this);
+	return std::move(init * (*this));
 }
 
 void Shape::add_point(const Vec & point)

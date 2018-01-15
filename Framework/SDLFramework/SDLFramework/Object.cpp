@@ -1,6 +1,11 @@
 #include "Object.h"
 #include "RandomGenerator.h"
 
+Object::Object(const Object & other)
+	: Shape(other), line_draw_order{ other.line_draw_order }
+{
+}
+
 Object::Object(float x, float y, float z, float width, float height, float depth)
 {
 	Matrix translate(4, 4, true); translate.name("translate");
@@ -218,7 +223,10 @@ void Object::reset_rotate()
 }
 
 void Object::rotate(const Vec3 & around, float angle)
-{	
+{
+	if (angle == 0.f)
+		return;
+
 	float a = angle * (M_PI / 180.f);
 	float t1 = atan2f(around.z(), around.x());
 	float t2 = atan2f(around.y(), sqrt(around.x() * around.x() + around.z() * around.z()));

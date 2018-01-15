@@ -30,6 +30,7 @@ Cube3d::Cube3d(float x, float y, float z, float width, float height, float depth
 	};
 }
 
+
 void Cube3d::Update(float deltaTime)
 {
 }
