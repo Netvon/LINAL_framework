@@ -20,6 +20,7 @@
 #include "TargetCube.h"
 #include "Ship.h"
 #include "RandomGenerator.h"
+#include "Bullet.h"
 
 int main(int args[])
 {
@@ -102,6 +103,7 @@ int main(int args[])
 	Ship ship{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
 	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
+	Bullet bullet{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
 
 	std::vector<Cube3d> cubes;
 
@@ -144,6 +146,7 @@ int main(int args[])
 	application->AddRenderable(&ship);
 	application->AddRenderable(&cube_b);
 	application->AddRenderable(&cube_c);
+	//application->AddRenderable(&bullet);
 
 	constexpr float movement = 10.f;
 	constexpr float camera_movement = 10.f;
