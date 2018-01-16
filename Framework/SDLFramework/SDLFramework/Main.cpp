@@ -62,11 +62,10 @@ int main(int args[])
 	application->SetCamera(camera);
 
 	Ship ship{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
-	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
-	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
+	TargetCube target_cube{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	
-	Cube3d bullet{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
-	set_bullet(bullet);
+	Cube3d bullet1{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
+	set_bullet(bullet1);
 
 	Cube3d bullet2{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
 	set_bullet(bullet2);
@@ -95,7 +94,7 @@ int main(int args[])
 		application->AddRenderable(&cube);
 	}
 
-	cube_b.line_color(Color(255, 0, 0, 255));
+	target_cube.line_color(Color(255, 0, 0, 255));
 	
 	application->SetTargetFPS(60);
 	application->SetColor(Color(48, 124, 56, 0));
@@ -128,7 +127,7 @@ int main(int args[])
 	float bullet_dist = 0.0f;
 
 	DebugDisplay dd2{
-		[&ship, &cube_b, &bullet_dist]() -> DebugDisplay::debug_list {
+		[&ship, &target_cube, &bullet_dist]() -> DebugDisplay::debug_list {
 
 			std::stringstream pos;
 			pos << "( " << std::setw(8) << std::fixed << std::setprecision(2) << ship.location()[0]
@@ -141,7 +140,7 @@ int main(int args[])
 
 
 			std::stringstream target_dist;
-			target_dist << std::fixed << std::setw(6) << std::setprecision(2) << (ship.location() - cube_b.location()).length();
+			target_dist << std::fixed << std::setw(6) << std::setprecision(2) << (ship.location() - target_cube.location()).length();
 
 			std::stringstream b_dist;
 			b_dist << std::fixed << std::setw(6) << std::setprecision(2) << bullet_dist;
@@ -180,9 +179,8 @@ int main(int args[])
 	//application->AddRenderable(&dd3);
 
 	application->AddRenderable(&ship);
-	application->AddRenderable(&cube_b);
-	application->AddRenderable(&cube_c);
-	application->AddRenderable(&bullet);
+	application->AddRenderable(&target_cube);
+	application->AddRenderable(&bullet1);
 	application->AddRenderable(&bullet2);
 	application->AddRenderable(&bullet3);
 
@@ -350,7 +348,7 @@ int main(int args[])
 				if (event.key.keysym.scancode == SDL_SCANCODE_SPACE) {
 
 					if (bullet_count == 0)
-						fire_bullet(bullet, ship);
+						fire_bullet(bullet1, ship);
 					else if (bullet_count == 1)
 						fire_bullet(bullet2, ship);
 					else if (bullet_count == 2)
@@ -409,15 +407,15 @@ int main(int args[])
 			ship.turn() = 0.f;
 		}
 
-		bullet1_dist = (bullet.location() - cube_b.location()).length();
-		bullet2_dist = (bullet2.location() - cube_b.location()).length();
-		bullet3_dist = (bullet3.location() - cube_b.location()).length();
+		bullet1_dist = (bullet1.location() - target_cube.location()).length();
+		bullet2_dist = (bullet2.location() - target_cube.location()).length();
+		bullet3_dist = (bullet3.location() - target_cube.location()).length();
 
 		bullet_dist = std::min(bullet1_dist, std::min(bullet2_dist, bullet3_dist));
 
 		if (bullet1_dist <= 30.f || bullet1_dist > 1000.f) {
-			bullet.visible() = false;
-			bullet.speed() = 0.f;
+			bullet1.visible() = false;
+			bullet1.speed() = 0.f;
 		}
 
 		if (bullet2_dist <= 30.f || bullet2_dist > 1000.f) {
