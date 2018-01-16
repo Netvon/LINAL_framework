@@ -93,5 +93,29 @@ namespace Tests
 			Assert::IsTrue(a[0] == Vec{ -3.f, -2.f, -1.f });
 			Assert::IsTrue(a(1, 0) == -2.f);
 		}
+
+		TEST_METHOD(ThrowsOnIncompatible)
+		{
+			Matrix a
+			{
+				{ -3, -2, -1, 3 },
+				{ 2, 3, 0, 3 },
+				{ 1, 4, 5, 3},
+				{ 6, 7, 8, 3 }
+			};
+
+			Matrix b
+			{
+				{ 9, -3, -1 },
+				{ -4, 10, 11 },
+				{ -2, 0, 2 }
+			};
+
+			auto test = [&a, &b]() {
+				a * b;
+			};
+
+			Assert::ExpectException<std::out_of_range>(test);
+		}
 	};
 }
