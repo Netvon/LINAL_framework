@@ -34,5 +34,11 @@ void TargetCube::Update(float deltaTime)
 		scale_up = true;
 	}
 
+	_rotate += 1.f * deltaTime;
+	if (_rotate > 360.f)
+		_rotate = 0.f;
+
+	roll() += 10.f * deltaTime;
+
 	_needs_update = true;
 }

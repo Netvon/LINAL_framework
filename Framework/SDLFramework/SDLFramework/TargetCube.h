@@ -11,5 +11,6 @@ public:
 
 private:
 	bool scale_up{ true };
+	float _rotate{ 0.f };
 };
 

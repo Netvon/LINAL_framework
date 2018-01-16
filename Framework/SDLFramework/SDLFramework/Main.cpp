@@ -26,6 +26,7 @@
 
 void fire_bullet(Cube3d &bullet, Ship &ship)
 {
+	bullet.is_active(true);
 	bullet.visible() = true;
 	bullet.heading() = ship.up();
 	bullet.roll() = ship.roll();
@@ -475,6 +476,21 @@ int main(int args[])
 		bullet3_dist = (bullet3.location() - cube_b.location()).length();
 
 		bullet_dist = std::min(bullet1_dist, std::min(bullet2_dist, bullet3_dist));
+
+		if (bullet1_dist <= 30.f || bullet1_dist > 1000.f) {
+			bullet.visible() = false;
+			bullet.speed() = 0.f;
+		}
+
+		if (bullet2_dist <= 30.f || bullet2_dist > 1000.f) {
+			bullet2.visible() = false;
+			bullet2.speed() = 0.f;
+		}
+
+		if (bullet3_dist <= 30.f || bullet3_dist > 1000.f) {
+			bullet3.visible() = false;
+			bullet3.speed() = 0.f;
+		}
 
 		/*ship.reset_rotate();
 		ship.rotate(rotation_axis, rotation);
