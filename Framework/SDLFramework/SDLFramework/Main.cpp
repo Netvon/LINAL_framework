@@ -26,76 +26,24 @@
 
 void fire_bullet(Cube3d &bullet, Ship &ship)
 {
+	Matrix spawn_on_matrix = ship.transform(Vec{ 0.f, -3.f, 0.f, 1.f });
+	Vec4 spawn_on = spawn_on_matrix[0];
+
 	bullet.is_active(true);
 	bullet.visible() = true;
 	bullet.heading() = ship.up();
 	bullet.roll() = ship.roll();
 	bullet.dive() = ship.dive();
 	bullet.turn() = ship.turn();
-	bullet.x() = ship.x();
-	bullet.y() = ship.y();
-	bullet.z() = ship.z() + 20.f;
+	bullet.x() = spawn_on.x();
+	bullet.y() = spawn_on.y();
+	bullet.z() = spawn_on.z();
 
 	bullet.speed() = ship.speed() + 100.f;
 }
 
 int main(int args[])
 {
-	/*Vec a{ 1.0f, 2.0f, 3.0f };
-	Vec b{ 10.f, 10.f };
-
-	Vec c = b + a;
-	Vec d = b - a;
-	Vec f = b * 5.f;
-
-	Vec2 v2(10.f, 5.f);
-	Vec2 v3(10.f, 5.f);
-
-	v2.y() += 5.0f;
-
-	v2 += b;
-
-	Matrix ma {
-		{ 1, 4, 6, 10 },
-		{ 2, 7, 5, 3 }
-	};
-
-	Matrix mb{
-		{ 1, 4, 6 },
-		{ 2, 7, 5 },
-		{ 9, 0, 11 },
-		{ 3, 1, 0 }
-	};
-
-	Matrix result = ma * mb;
-
-	Matrix expected {
-		{ 93, 42, 92 },
-		{ 70, 60, 102 }
-	};
-
-	Shape shape_a {
-		{ 1, 4, 6, 10 },
-		{ 2, 7, 5, 3 }
-	};
-
-	shape_a.add_transform(mb);
-	shape_a.add_transform("test", {
-		{ 0.0f }
-	});*/
-
-	
-	//Matrix output = square.transform();
-
-	/*auto transformed = shape_a.transform();
-
-	bool worked = result == expected;
-
-	if (Matrix mat{ v2, v3, b }) {
-		auto worked = true;
-	}*/
-
-	//auto window = Window::CreateSDLWindow();
 	auto application = new FWApplication();
 	if (!application->GetWindow())
 	{
@@ -113,28 +61,18 @@ int main(int args[])
 
 	application->SetCamera(camera);
 
-	//Square2d square{ 150.f, 125.f, 25.f, 25.f };
-
-	//auto hmm = camera.fix(camera.matrix() * square.transform());
-
 	Ship ship{ 0.f, 0.f, 200.f, 10.f, 20.f, 10.f };
 	TargetCube cube_b{ -100.f, 0.f, 200.f, 20.f, 20.f, 20.f };
 	Cube3d cube_c{ 200.f, 50.f, 200.f, 20.f, 20.f, 20.f };
 	
 	Cube3d bullet{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
-	bullet.visible() = false;
-	bullet.dampening() = 0.f;
-	bullet.vmax() = 1000.f;
+	set_bullet(bullet);
 
 	Cube3d bullet2{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
-	bullet2.visible() = false;
-	bullet2.dampening() = 0.f;
-	bullet2.vmax() = 1000.f;
+	set_bullet(bullet2);
 
 	Cube3d bullet3{ 0.f, 0.f, 200.f, 2.5f, 20.f, 2.5f };
-	bullet3.visible() = false;
-	bullet3.dampening() = 0.f;
-	bullet3.vmax() = 1000.f;
+	set_bullet(bullet3);
 
 	ship.dampening() = 0.f;
 	
@@ -492,15 +430,6 @@ int main(int args[])
 			bullet3.speed() = 0.f;
 		}
 
-		/*ship.reset_rotate();
-		ship.rotate(rotation_axis, rotation);
-		ship.rotate(roll, roll_angle);
-		ship.rotate(zdive, z_angle);*/
-
-		//application->GetCamera().look_at()[2] = ship.z() - 100.f;
-		//application->GetCamera().eye()[2] = ship.z() - 200.f;
-
-		//if(direction != 0.f)
 		ship.heading() = ship.up();
 		ship.speed() += movement * direction;
 
@@ -538,4 +467,12 @@ int main(int args[])
 	}
 		
 	return EXIT_SUCCESS;
+}
+
+void set_bullet(Cube3d &bullet)
+{
+	bullet.visible() = false;
+	bullet.dampening() = 0.f;
+	bullet.vmax() = 1000.f;
+	bullet.line_color(Color(66, 158, 244, 255));
 }
