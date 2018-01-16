@@ -413,17 +413,17 @@ int main(int args[])
 
 		bullet_dist = std::min(bullet1_dist, std::min(bullet2_dist, bullet3_dist));
 
-		if (bullet1_dist <= 30.f || bullet1_dist > 1000.f) {
+		if (bullet1_dist <= target_cube.scale_x() * target_cube.width() || bullet1_dist > 1000.f) {
 			bullet1.visible() = false;
 			bullet1.speed() = 0.f;
 		}
 
-		if (bullet2_dist <= 30.f || bullet2_dist > 1000.f) {
+		if (bullet2_dist <= target_cube.scale_x() * target_cube.width() || bullet2_dist > 1000.f) {
 			bullet2.visible() = false;
 			bullet2.speed() = 0.f;
 		}
 
-		if (bullet3_dist <= 30.f || bullet3_dist > 1000.f) {
+		if (bullet3_dist <= target_cube.scale_x() * target_cube.width() || bullet3_dist > 1000.f) {
 			bullet3.visible() = false;
 			bullet3.speed() = 0.f;
 		}
